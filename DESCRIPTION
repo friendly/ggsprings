@@ -1,0 +1,14 @@
+Package: ggsprings
+Title: ggplot2 extension to draw springs
+Version: 0.0.0.9000
+Authors@R: 
+    person("Michael", "Friendly", , "friendly@yorku.ca", 
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-3237-0941"))
+Description: ggsprings implements an extension of "geom_path"" which draws paths as springs instead of straight lines.
+    Aside from possible artistic use, the main impetus for this is to draw points connected by springs,
+    with properties of length and tension. 
+Encoding: UTF-8
+Language: en-US
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
