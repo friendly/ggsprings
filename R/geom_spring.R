@@ -1,5 +1,31 @@
 # constructors
 
+#' Connect observations with springs
+#'
+#' \code{geom_spring} is similar to \code{\link[ggplot2]{geom_path}} in that it connects points,
+#' but uses a spring instead of a line.
+#'
+#' @inheritParams ggplot2::geom_path
+#  @param mapping
+#  @param data
+#  @param stat
+#  @param position
+#  @param ...
+#' @param diameter Diameter of the spring
+#' @param tension  Spring tension constant
+#' @param n        Number of points
+#' @param arrow
+#  @param lineend
+#  @param linejoin
+#  @param na.rm
+#  @param show.legend
+#  @param inherit.aes
+#'
+#' @return A ggplot2 layer
+#' @export
+#'
+#' @examples
+#' None yet
 geom_spring <- function(mapping = NULL,
                         data = NULL,
                         stat = "spring",
@@ -36,6 +62,25 @@ geom_spring <- function(mapping = NULL,
   )
 }
 
+#' Spring stat
+#'
+#' @param mapping
+#' @param data
+#' @param geom
+#' @param position
+#' @param ...
+#' @param diameter
+#' @param tension
+#' @param n
+#' @param na.rm
+#' @param show.legend
+#' @param inherit.aes
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' None yet
 stat_spring <- function(mapping = NULL,
                         data = NULL,
                         geom = "path",
