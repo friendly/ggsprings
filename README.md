@@ -26,6 +26,7 @@ The current (non-working) version here was copied/pasted from the book.
 
 A blog post by Joshua Loftus, [Least squares by springs](https://joshualoftus.com/posts/2020-11-23-least-squares-as-springs/least-squares-as-springs.html)
 illustrates this, citing [code from Thomas Lin Pederson](https://twitter.com/thomasp85/status/1331338379636649986).
+However, no code is available for his examples.
 
 ### Examples
 
