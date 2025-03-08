@@ -2,6 +2,7 @@
 # ggsprings
 
 <!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 ggsprings is designed to
@@ -11,6 +12,12 @@ with properties of length and tension.
 
 A leading example is to illustrate how least squares regression
 is "solved" by connecting data points to a rod, where the springs are constrained to be vertical.
+The mathematics behind this are well-described in this [Math Stackexchange post](https://math.stackexchange.com/questions/2369673/proving-linear-regression-by-using-physical-springs-model),
+where the least squares estimates of intercept and slope are shown to be the equilibrium position that minimized the sum of forces
+and torques exerted by springs.
+
+![](man/figures/potential-energy.png)
+
 If the springs are allowed to be free, the physical solution is the major PCA axis.
 
 
@@ -26,18 +33,18 @@ These images show the intent of a `ggsprings` package.
 
 **Least squares regression**
 
-![](loftus-springs-ex1.png)
+![](man/figures/loftus-springs-ex1.png)
 
 **Principal components analysis**
 
-![](loftus-springs-ex2.png)
+![](man/figures/loftus-springs-ex2.png)
 
 **Animated version**
 
 This [StatsExchange post](https://stats.stackexchange.com/questions/2691/making-sense-of-principal-component-analysis-eigenvectors-eigenvalues/140579#140579)
 show an animation of the process of fitting PCA by springs.
 
-![](pca-springs-cropped.gif)
+![](man/figures/pca-springs-cropped.gif)
 
 
 ## Installation
@@ -54,3 +61,7 @@ library(ggsprings)
 ## basic example code
 ```
 
+## Related 
+
+* An [interactive demo](https://www.desmos.com/calculator/90vaqtqpx6) by Trey Goesh allows you to 
+visualize the effect of moving points, changing spring parameters, etc.
