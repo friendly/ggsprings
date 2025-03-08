@@ -26,13 +26,32 @@ The current (non-working) version here was copied/pasted from the book.
 
 A blog post by Joshua Loftus, [Least squares by springs](https://joshualoftus.com/posts/2020-11-23-least-squares-as-springs/least-squares-as-springs.html)
 illustrates this, citing [code from Thomas Lin Pederson](https://twitter.com/thomasp85/status/1331338379636649986).
-However, no code is available for his examples.
+Code to reproduce the first example is contained in `examples/springs.R` and `examples/gapminder-ex.R`.
 
 ### Examples
 
 These images show the intent of a `ggsprings` package.
 
 **Least squares regression**
+
+A plot of `lifeExp` vs. `gdpPercap` from the `gapminder` data, with `gdpPercap` on a log10 scale, using the code in the `examples/` folder.
+Springs are connected between the observed value `y = lifeExp` and the fitted value on the regression line, `yend = yhat`, computed
+with `predict()` for the linear model.
+`tension` was set to `5 + (lifeExp - yhat)^2)`
+
+```
+spring_plot <- simple_plot +
+  geom_spring(aes(x = gdpPercap,
+                  xend = gdpPercap,
+                  y = lifeExp,
+                  yend = yhat,
+                  diameter = diameter,
+                  tension = tension), color = "darkgray") +
+  stat_smooth(method = "lm", se = FALSE) +
+  geom_point(size = 2)
+
+spring_plot
+```
 
 ![](man/figures/loftus-springs-ex1.png)
 
