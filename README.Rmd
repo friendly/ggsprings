@@ -55,7 +55,7 @@ spring_plot <- simple_plot +
 spring_plot
 ```
 
-![](man/figures/loftus-springs-ex1.png)
+![](man/figures/loftus-springs-ex1.png){width=60%}
 
 **Principal components analysis**
 
@@ -63,12 +63,18 @@ In PCA, the first principal component maximizes the variance of the linear combi
 minimizes the sum of squares of **perpendicular** distances of the points to the line.
 
 
-![](man/figures/loftus-springs-ex2.png)
+![](man/figures/loftus-springs-ex2.png){width=60%}
 
 **Animated version**
 
 This [StatsExchange post](https://stats.stackexchange.com/questions/2691/making-sense-of-principal-component-analysis-eigenvectors-eigenvalues/140579#140579)
 show an animation of the process of fitting PCA by springs.
+
+It doesn't actually draw springs, but it gets the animation right. You can see that the forces of the
+springs initially produce large changes in the fitted line, these cause the line to swing back and forth
+across it's final position, and shortly the forces begin to balance out.
+
+This animation is written in Matlib, using the code in [pca_animmation.m](https://gist.github.com/anonymous/7d888663c6ec679ea65428715b99bfdd).
 
 ![](man/figures/pca-springs-cropped.gif)
 
@@ -83,11 +89,18 @@ remotes::install.github("friendly/ggsprings")
 
 ## TODO
 
-* Finish documenting the package. I don't quite know how to document a `ggproto` or to use `@inheritParams` for ggplot2 extensions
+* Finish documenting the package. I don't quite know how to document a `ggproto` or to use `@inheritParams` for ggplot2 extensions. Add some more examples illustrating spring aesthetics and
+features.
 
 * Use the package to re-create the [gapminder example](examples/gapminder-ex.R).
 
 * Try to use `gganimate` for an animated example.
+
+* Make a hex logo
+
+* Write a vignette explaining the connection betweem least squares and springs better.
+
+
 
 ## Example
 
