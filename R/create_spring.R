@@ -2,6 +2,7 @@
 
 #' Create a spring
 #'
+#' @importFrom rlang abort
 #' @param x      starting X coordinate
 #' @param y      starting Y coordinate
 #' @param xend   ending X coordinate

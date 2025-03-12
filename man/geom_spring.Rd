@@ -128,5 +128,5 @@ A ggplot2 layer
 but uses a spring instead of a line.
 }
 \examples{
-None yet
+# None yet
 }

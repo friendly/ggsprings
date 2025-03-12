@@ -7,6 +7,7 @@
 #' but uses a spring instead of a line.
 #'
 #' @inheritParams ggplot2::geom_path
+#' @importFrom ggplot2 layer
 #  @param mapping
 #  @param data
 #  @param stat
@@ -26,7 +27,7 @@
 #' @export
 #'
 #' @examples
-#' None yet
+#' # None yet
 geom_spring <- function(mapping = NULL,
                         data = NULL,
                         stat = "identity",
@@ -61,6 +62,7 @@ geom_spring <- function(mapping = NULL,
 #' Spring stat
 #'
 #' @inheritParams ggplot2::geom_path
+#' @importFrom ggplot2 layer
 #  @param mapping
 #  @param data
 #  @param geom
