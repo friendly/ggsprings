@@ -1,13 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# ggsprings
-
 <!-- badges: start -->
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
+
+# ggsprings
 
 `ggsprings` is designed to implement an extension of `geom_path` which
 draws paths as springs instead of straight lines. Aside from possible
