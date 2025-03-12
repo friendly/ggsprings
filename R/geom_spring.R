@@ -15,7 +15,7 @@
 #' @param diameter Diameter of the spring
 #' @param tension  Spring tension constant
 #' @param n        Number of points
-#' @param arrow
+#  @param arrow
 #  @param lineend
 #  @param linejoin
 #  @param na.rm

@@ -1,5 +1,29 @@
 # https://ggplot2-book.org/ext-springs
 
+#' Create a spring
+#'
+#' @param x      starting X coordinate
+#' @param y      starting Y coordinate
+#' @param xend   ending X coordinate
+#' @param yend   ending Y coordinate
+#' @param diameter diameter of spring
+#' @param tension  tension of spring
+#' @param n      number of points betwee start and end
+#'
+#' @return A data frame of x, y coordinates
+#' @export
+#'
+#' @examples
+#' spring <- create_spring(
+#' x = 4, y = 2, xend = 10, yend = 6,
+#' diameter = 2, tension = 0.6, n = 50
+#' )
+#'
+#' ggplot(spring) +
+#'   geom_path(aes(x = x, y = y)) +
+#'   coord_equal()
+
+
 create_spring <- function(x,
                           y,
                           xend,

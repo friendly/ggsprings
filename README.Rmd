@@ -8,7 +8,7 @@
 `ggsprings` is designed to
 implement an extension of `geom_path` which draws paths as springs instead of straight lines.
 Aside from possible artistic use, the main impetus for this is to draw points connected by springs,
-with properties of length and tension. The initial code for this comes from
+with properties of length, diameter and tension. The initial code for this comes from
 [ggplot2: Elegant Graphics for Data Analysis (3e), Ch. 21](https://ggplot2-book.org/ext-springs)
 
 A leading example is to illustrate how least squares regression
@@ -23,15 +23,15 @@ If the springs are allowed to be free, the physical solution is the major PCA ax
 
 
 How to do this is described in the `ggplot2` book, https://ggplot2-book.org/ext-springs.
-The current (non-working) version here was copied/pasted from the book.
+The current version here was copied/pasted from the book.
 
 A blog post by Joshua Loftus, [Least squares by springs](https://joshualoftus.com/posts/2020-11-23-least-squares-as-springs/least-squares-as-springs.html)
 illustrates this, citing [code from Thomas Lin Pederson](https://twitter.com/thomasp85/status/1331338379636649986).
 Code to reproduce the first example is contained in `examples/springs.R` and `examples/gapminder-ex.R`.
 
-### Examples
+### Illustrations
 
-These images show the intent of a `ggsprings` package.
+These images show the intent of  `ggsprings` package.
 
 **Least squares regression**
 
@@ -59,6 +59,10 @@ spring_plot
 
 **Principal components analysis**
 
+In PCA, the first principal component maximizes the variance of the linear combination, or equivalently,
+minimizes the sum of squares of **perpendicular** distances of the points to the line.
+
+
 ![](man/figures/loftus-springs-ex2.png)
 
 **Animated version**
@@ -71,19 +75,30 @@ show an animation of the process of fitting PCA by springs.
 
 ## Installation
 
-You can install the development version of ggsprings by forking this repo and trying to get it going.
+You can install the current version of `ggsprings` from this repo,
 
+```
+remotes::install.github("friendly/ggsprings")
+```
+
+## TODO
+
+* Finish documenting the package. I don't quite know how to document a `ggproto` or to use `@inheritParams` for ggplot2 extensions
+
+* Use the package to re-create the [gapminder example](examples/gapminder-ex.R).
+
+* Try to use `gganimate` for an animated example.
 
 ## Example
 
-Some basic examples:
+Some basic examples top show what is working:
 
 
 ```{r}
 library(ggsprings)
 library(ggplot2)
 library(tibble)
-library(dplyr)
+#library(dplyr)
 
 set.seed(421)
 df <- tibble(
@@ -98,8 +113,27 @@ ggplot(df) +
   geom_spring(aes(x = x, y = y,
                   xend = xend, yend = yend,
                   color = class),
-              linewidth = 2) +
-  coord_equal()
+              linewidth = 2) 
+
+
+# Using tension and diameter as aesthetics
+
+
+df <- tibble(
+  x = runif(5, max = 10),
+  y = runif(5, max = 10),
+  xend = runif(5, max = 10),
+  yend = runif(5, max = 10),
+  class = sample(letters[1:2], 5, replace = TRUE),
+  tension = runif(5),
+  diameter = runif(5, 0.5, 1.5)
+)
+
+ggplot(df, aes(x, y, xend = xend, yend = yend)) +
+  geom_spring(aes(tension = tension,
+                  diameter = diameter,
+                  color = class),
+              linewidth = 1.2) 
 ```
 
 ## Related 

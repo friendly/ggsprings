@@ -96,7 +96,7 @@ lists which parameters it can accept.
 
 \item{n}{Number of points}
 
-\item{arrow}{}
+\item{arrow}{Arrow specification, as created by \code{\link[grid:arrow]{grid::arrow()}}.}
 
 \item{lineend}{Line end style (round, butt, square).}
 

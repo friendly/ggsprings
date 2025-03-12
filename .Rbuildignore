@@ -1,4 +1,5 @@
 ^ggsprings\.Rproj$
 ^\.Rproj\.user$
 examples/
-
+README.*
+^LICENSE\.md$

@@ -20,6 +20,15 @@ ggplot(df) +
               linewidth = 2) +
   coord_equal()
 
+# faceting
+
+ggplot(df) +
+  geom_spring(
+    aes(x, y, xend = xend, yend = yend, color = class),
+    linewidth = 1.5
+  ) +
+  coord_equal() +
+  facet_wrap(~ class)
 
 # tension and diameter as aesthetics
 
@@ -38,6 +47,5 @@ ggplot(df, aes(x, y, xend = xend, yend = yend)) +
   geom_spring(aes(tension = tension,
                   diameter = diameter,
                   color = class),
-              linewidth = 1.2) +
-  coord_equal()
+              linewidth = 1.2)
 
