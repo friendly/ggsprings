@@ -7,11 +7,9 @@
 geom_spring(
   mapping = NULL,
   data = NULL,
-  stat = "spring",
+  stat = "identity",
   position = "identity",
   ...,
-  diameter = 1,
-  tension = 0.75,
   n = 50,
   arrow = NULL,
   lineend = "butt",
@@ -96,9 +94,7 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 
-\item{diameter}{Diameter of the spring}
-
-\item{tension}{Spring tension constant}
+\item{n}{Number of points}
 
 \item{arrow}{}
 
@@ -119,6 +115,13 @@ display.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
+
+\item{diameter}{Diameter of the spring}
+
+\item{tension}{Spring tension constant}
+}
+\value{
+A ggplot2 layer
 }
 \description{
 \code{geom_spring} is similar to \code{\link[ggplot2]{geom_path}} in that it connects points,

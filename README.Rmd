@@ -5,10 +5,11 @@
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-ggsprings is designed to
+`ggsprings` is designed to
 implement an extension of `geom_path` which draws paths as springs instead of straight lines.
 Aside from possible artistic use, the main impetus for this is to draw points connected by springs,
-with properties of length and tension. 
+with properties of length and tension. The initial code for this comes from
+[ggplot2: Elegant Graphics for Data Analysis (3e), Ch. 21](https://ggplot2-book.org/ext-springs)
 
 A leading example is to illustrate how least squares regression
 is "solved" by connecting data points to a rod, where the springs are constrained to be vertical.
@@ -37,7 +38,8 @@ These images show the intent of a `ggsprings` package.
 A plot of `lifeExp` vs. `gdpPercap` from the `gapminder` data, with `gdpPercap` on a log10 scale, using the code in the `examples/` folder.
 Springs are connected between the observed value `y = lifeExp` and the fitted value on the regression line, `yend = yhat`, computed
 with `predict()` for the linear model.
-`tension` was set to `5 + (lifeExp - yhat)^2)`
+`tension` was set to `5 + (lifeExp - yhat)^2)`.
+Code for this is in [examples/gapminder-ex.R](examples/gapminder-ex.R)
 
 ```
 spring_plot <- simple_plot +
@@ -74,11 +76,30 @@ You can install the development version of ggsprings by forking this repo and tr
 
 ## Example
 
-There is really nothing working here yet:
+Some basic examples:
 
-``` r
+
+```{r}
 library(ggsprings)
-## basic example code
+library(ggplot2)
+library(tibble)
+library(dplyr)
+
+set.seed(421)
+df <- tibble(
+  x = runif(5, max = 10),
+  y = runif(5, max = 10),
+  xend = runif(5, max = 10),
+  yend = runif(5, max = 10),
+  class = sample(letters[1:2], 5, replace = TRUE)
+)
+
+ggplot(df) +
+  geom_spring(aes(x = x, y = y,
+                  xend = xend, yend = yend,
+                  color = class),
+              linewidth = 2) +
+  coord_equal()
 ```
 
 ## Related 
