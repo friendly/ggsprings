@@ -1,3 +1,11 @@
+#' @name ggSpring
+#'
+#' @title ggSprings extensions to ggplot2
+#' @format NULL
+#' @usage NULL
+#' @rdname Spring_protos
+#' @export
+
 StatSpring <- ggproto("StatSpring", Stat,
 
     setup_data = function(data, params) {

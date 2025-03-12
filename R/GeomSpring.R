@@ -1,5 +1,12 @@
 # https://ggplot2-book.org/ext-springs#creating-the-geom
 
+#' @name ggSpring
+#'
+#' @title ggSprings extensions to ggplot2
+#' @format NULL
+#' @usage NULL
+#' @rdname Spring_protos
+#' @export
 
 GeomSpring <- ggproto("GeomSpring", Geom,
 

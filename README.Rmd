@@ -118,7 +118,11 @@ features.
 
 * Make a hex logo
 
-* Write a vignette explaining the connection betweem least squares and springs better.
+* Write a vignette explaining the connection between least squares and springs better. In particular,
+
+  + Illustrate a sample mean by springs: This is the point where positive and negative deviations
+  sum to zero $\Sigma (x - \bar{x}) = 0$, and also minimizes the sum of squares, $\Sigma (x - \bar{x})^2$.
+  + Illustrate least squares regression in relation to the the normal equations, 
 
 
 
