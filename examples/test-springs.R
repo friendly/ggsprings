@@ -32,7 +32,7 @@ ggplot(df) +
 
 # tension and diameter as aesthetics
 
-
+set.seed(4234)
 df <- tibble(
   x = runif(5, max = 10),
   y = runif(5, max = 10),

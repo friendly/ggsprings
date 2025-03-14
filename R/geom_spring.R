@@ -7,14 +7,30 @@
 #' but uses a spring instead of a line.
 #'
 #' @inheritParams ggplot2::geom_path
+#'
+#' @section Aesthetics:
+#' geom_spring understands the following aesthetics (required aesthetics are in bold):
+#'
+#' - **x**
+#' - **y**
+#' - **xend**
+#' - **yend**
+#' - diameter
+#' - tension
+#' - color
+#' - linewidth
+#' - linetype
+#' - alpha
+#' - lineend
+
 #' @importFrom ggplot2 layer
 #  @param mapping
 #  @param data
 #  @param stat
 #  @param position
 #  @param ...
-#' @param diameter Diameter of the spring
-#' @param tension  Spring tension constant
+#' @param diameter Diameter of the spring, i.e., the diameter of a circle that is stretched into a spring shape
+#' @param tension  Spring tension constant. This is calibrated as the total distance moved from the start point to the end point, divided by the size of the generating circle.
 #' @param n        Number of points
 #  @param arrow
 #  @param lineend
@@ -65,7 +81,7 @@ geom_spring <- function(mapping = NULL,
 #' @importFrom ggplot2 layer
 #  @param mapping
 #  @param data
-#  @param geom
+#' @param geom     The \code{geom} used to draw the spring segment
 #  @param position
 #  @param ...
 #' @param n        Number of points
@@ -77,7 +93,7 @@ geom_spring <- function(mapping = NULL,
 #' @export
 #'
 #' @examples
-#' None yet
+#' # None yet
 stat_spring <- function(mapping = NULL,
                         data = NULL,
                         geom = "path",

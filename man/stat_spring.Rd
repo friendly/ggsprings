@@ -37,6 +37,8 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
+\item{geom}{The \code{geom} used to draw the spring segment}
+
 \item{position}{A position adjustment to use on the data for this layer. This
 can be used in various ways, including to prevent overplotting and
 improving the display. The \code{position} argument accepts the following:
@@ -101,5 +103,5 @@ A ggplot2 layer
 Spring stat
 }
 \examples{
-None yet
+# None yet
 }

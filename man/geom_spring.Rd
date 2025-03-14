@@ -116,9 +116,9 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
-\item{diameter}{Diameter of the spring}
+\item{diameter}{Diameter of the spring, i.e., the diameter of a circle that is stretched into a spring shape}
 
-\item{tension}{Spring tension constant}
+\item{tension}{Spring tension constant. This is calibrated as the total distance moved from the start point to the end point, divided by the size of the generating circle.}
 }
 \value{
 A ggplot2 layer
@@ -127,6 +127,24 @@ A ggplot2 layer
 \code{geom_spring} is similar to \code{\link[ggplot2]{geom_path}} in that it connects points,
 but uses a spring instead of a line.
 }
+\section{Aesthetics}{
+
+geom_spring understands the following aesthetics (required aesthetics are in bold):
+\itemize{
+\item \strong{x}
+\item \strong{y}
+\item \strong{xend}
+\item \strong{yend}
+\item diameter
+\item tension
+\item color
+\item linewidth
+\item linetype
+\item alpha
+\item lineend
+}
+}
+
 \examples{
 # None yet
 }
