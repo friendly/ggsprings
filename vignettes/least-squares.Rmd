@@ -1,0 +1,160 @@
+---
+title: "Least Squares By Springs"
+author: "Michael Friendly"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Least Squares By Springs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r nomessages, echo = FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.height = 5,
+  fig.width = 5
+)
+options(digits=4)
+par(mar=c(3,3,1,1)+.1)
+```
+
+```{r setup, include=FALSE}
+library(ggsprings)
+library(tibble)
+library(tinytable)
+library(dplyr)
+```
+
+## Introduction
+
+- Hooke's Law, potential energy and force
+
+- Functions, energy, force
+
+```{r echo = FALSE}
+tbl <- tibble::tribble(
+  ~Mathematics,   ~Physical,
+  "function, $f (x)$",          "potential energy, $P(x)$",
+  "derivative, $f\\prime (x)$",  "force, $F(x) = -P\\prime(x)$",
+  "$\\argmin_x f(x) \\implies f\\prime (x) = 0$",
+          "equilibrium, $\\argmin_x P(x) \\implies F (x) = 0$"
+  )
+
+tt(tbl)
+```
+
+
+## Mean of a sample
+
+- History of sample mean ...
+
+
+The sample mean has several nice physical analogs, which stem from the properties that 
+
+* the sum of deviations ($e_i$) of observations ($x_i$) from the mean $\bar{x}$ equals 0: $\Sigma_i e_i =\Sigma_i ( x_i - \bar{x} ) = 0$.
+
+* the sum of squared deviations is the smallest for any choice of $\bar{x}$, $\bar{x} = \argmin_{\bar{x}} ( x_i - \bar{x} )^2$
+
+### Demonstration using springs
+
+
+Create a set of observations ...
+```{r mean1}
+set.seed(1234)
+N <- 8
+df <- tibble(
+  x = runif(N, 1, 10),
+  y = seq(1, N)
+)
+
+means <- colMeans(df) 
+xbar <- means[1] |> print()
+```
+
+First, set the tension of the spring to be the squared deviation of the observation from the mean.
+```{r mean2}
+df <- df |>
+  mutate(tension = (x - xbar)^2,
+         diameter = 0.2)
+```
+
+Then, visualize with springs: 
+
+```{r mean-springs}
+ggplot(df, aes(x=x, y=y)) +
+  geom_point(size = 5, color = "red") +
+  geom_segment(x = xbar, xend = xbar,
+               y = 1/2,  yend = N + 1/2,
+               linewidth = 3) +
+  geom_spring(aes(x = x, xend = xbar,
+                  y = y, yend = y,
+                  tension = tension,
+                  diameter = diameter),
+              color = "blue",
+              linewidth = 1.2) +
+  labs(x = "Value (x)",
+       y = "Observation number") +
+  ylim(0, N+2) +
+  scale_y_continuous(breaks = 1:N) +
+  annotate("text", x = xbar, y = N + 1,
+           label = "Movable\nrod", size = 5,
+           , lineheight = 3/4) +
+  theme_minimal(base_size = 15)
+```
+
+## Bivariate centroid
+
+For a bivariate sample, $(x_i, y_i)$, the centroid point, $(\bar{x}, \bar{y})$ is realized physically as the result of attaching
+springs between the fixed points and a free, movable point. Each point has potential energy proportional to its squared distance
+from the movable one, where the forces balance (sum to zero).
+
+Set this up for a sample of 10 points, uniformly distributed on (1, 10).
+```{r cent1}
+set.seed(1234)
+N <- 10
+df <- tibble(
+  x = runif(N, 1, 10),
+  y = runif(N, 1, 10)
+)
+
+means <- colMeans(df)
+xbar <- means[1]; ybar <- means[2]
+```
+
+Set the tension:
+
+```{r cent2}
+df <- df |>
+  mutate(tension = (x - xbar)^2 + (y - ybar)^2,
+         diameter = 0.4)
+```
+
+Visualize the springs:
+
+```{r centroid-springs}
+ggplot(df, aes(x=x, y=y)) +
+  geom_point(size = 5, color = "red") +
+  geom_spring(aes(x = x, xend = xbar,
+                  y = y, yend = ybar,
+                  tension = tension / 5,
+                  diameter = diameter),
+              color = "blue",
+              linewidth = 1.2) +
+  geom_point(x = xbar, y = ybar, 
+             size = 7,
+             shape = 15,
+             color = "black") +
+  scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(breaks = 1:10) +
+  theme_minimal(base_size = 15) 
+```
+
+### Animate this?
+
+One way to animate this would be to imagine the springs acting one at a time, sequentially on the position of the moving point, and looping until nothing changes. Not sure how to program this with `gganimate`.
+
+
+## Least squares regression
+
