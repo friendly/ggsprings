@@ -36,8 +36,33 @@ ggplot(df, aes(x=x, y=y)) +
            , lineheight = 3/4) +
   theme_minimal(base_size = 15)
 
+# try abs(x - xbar)
+df <- df |>
+  mutate(tension = abs(x - xbar),
+         diameter = 0.4)
+
+ggplot(df, aes(x=x, y=y)) +
+  geom_point(size = 5, color = "red") +
+  geom_segment(x = xbar, xend = xbar,
+               y = 1/2,  yend = N + 1/2,
+               linewidth = 3) +
+  geom_spring(aes(x = x, xend = xbar,
+                  y = y, yend = y,
+                  tension = tension / 4,
+                  diameter = diameter),
+              color = "blue",
+              linewidth = 1.2) +
+  labs(x = "Value (x)",
+       y = "Observation number") +
+  ylim(0, N+2) +
+  scale_y_continuous(breaks = 1:N) +
+  annotate("text", x = xbar, y = N + 1,
+           label = "Moveable\nrod", size = 5,
+           , lineheight = 3/4) +
+  theme_minimal(base_size = 15)
 
 # centroid by springs
+# tension ~ distance from mean
 
 set.seed(1234)
 N <- 10
@@ -50,7 +75,7 @@ means <- colMeans(df)
 xbar <- means[1]; ybar <- means[2]
 
 df <- df |>
-  mutate(tension = (x - xbar)^2 + (y - ybar)^2,
+  mutate(tension = sqrt((x - xbar)^2 + (y - ybar)^2),
          diameter = 0.4)
 
 

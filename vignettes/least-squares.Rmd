@@ -29,7 +29,37 @@ library(dplyr)
 
 ## Introduction
 
-- Hooke's Law, potential energy and force
+The method of least squares fitting is remarkable in its versatility. It grew out of practical problems in astronomy
+(the orbits of planets, librations of the moon) and geodesy (finding the "shape" of the earth), where astronomers and mathematicians sought
+to find a way to combine a collection of fallible observations (angular separation between stars) into a
+a single "best" estimate. Some of the best names in mathematics are associated with this discovery:
+Newton, Laplace, Legendre, Gauss. @Stigler:1981 recounts some of this history.
+
+It's original application was to justify the use of the arithmetic average $\bar{x}$ as the value
+that gave the smallest sum of squares of errors $\text{SSE} =\Sigma (x - \bar{x})^2$m but the same principle
+gives solutions for linear least squares regression, multiple regression, smoothing spline and non-linear models,
+all the way to exploratory factor analysis.
+
+As a mathematical method of estimation, least squares is also remarkably versatile in the variety of methods of proof
+that can justify it's application. Minimization of the sum of squares of errors can be solved by calculus or
+by a simple geometric argument. But it is the purpose of this vignette to show how least squares problems can be
+solved by springs. No need to invoke a function minimization algorithm or solve a system of equations. Just
+connect your observations to what you want to estimate with springs, and _bingo!_, let the springs give the answer.
+
+### Hooke's Law, potential energy and force
+
+
+**Linear springs**
+A linear spring is the one whose tension
+is directly proportional to its length: stretching such a spring
+to a length $x$ requires the force $F(x) = k\;x$. Force acts in a given direction, so compressing a spring
+requires a force $- k\;x$
+
+Here the multiplier $k$ is a constant (called the Hooke’s constant) that characterizes a particular spring. A small $k$
+means a lax spring, while a large $k$ means a stiff spring. By convention, the unstretched length of such a spring is zero.
+
+In the ggSprings package to date, all observations are considered to have the same, arbitrary spring constant. Allowing these
+to vary, with a `weight` aesthetic would be a natural way to implement weighted least squares.
 
 - Functions, energy, force
 
@@ -48,8 +78,6 @@ tt(tbl)
 
 ## Mean of a sample
 
-- History of sample mean ...
-
 
 The sample mean has several nice physical analogs, which stem from the properties that 
 
@@ -60,7 +88,7 @@ The sample mean has several nice physical analogs, which stem from the propertie
 ### Demonstration using springs
 
 
-Create a set of observations ...
+Create a set of observations, sampled randomly on [1, 10]
 ```{r mean1}
 set.seed(1234)
 N <- 8
@@ -73,14 +101,14 @@ means <- colMeans(df)
 xbar <- means[1] |> print()
 ```
 
-First, set the tension of the spring to be the squared deviation of the observation from the mean.
+Then, set the tension of the spring to be the absolute value of the deviation of the observation from the mean.
 ```{r mean2}
 df <- df |>
-  mutate(tension = (x - xbar)^2,
+  mutate(tension = abs(x - xbar),
          diameter = 0.2)
 ```
 
-Then, visualize with springs: 
+Then, visualize this with springs: 
 
 ```{r mean-springs}
 ggplot(df, aes(x=x, y=y)) +
@@ -107,7 +135,9 @@ ggplot(df, aes(x=x, y=y)) +
 ## Bivariate centroid
 
 For a bivariate sample, $(x_i, y_i)$, the centroid point, $(\bar{x}, \bar{y})$ is realized physically as the result of attaching
-springs between the fixed points and a free, movable point. Each point has potential energy proportional to its squared distance
+springs between the fixed points and a free, movable point. If we make the tension on the spring proportional to it's length
+or the distance to the centroid,
+each point will have potential energy proportional to its **squared** distance
 from the movable one, where the forces balance (sum to zero).
 
 Set this up for a sample of 10 points, uniformly distributed on (1, 10).
@@ -123,11 +153,11 @@ means <- colMeans(df)
 xbar <- means[1]; ybar <- means[2]
 ```
 
-Set the tension:
+Set the tension as the distance between the point and the mean:
 
 ```{r cent2}
 df <- df |>
-  mutate(tension = (x - xbar)^2 + (y - ybar)^2,
+  mutate(tension = sqrt((x - xbar)^2 + (y - ybar)^2),
          diameter = 0.4)
 ```
 
