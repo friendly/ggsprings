@@ -5,6 +5,7 @@
 #' @title ggSprings extensions to ggplot2
 #' @format NULL
 #' @usage NULL
+#' @importFrom rlang `%||%`
 #' @rdname Spring_protos
 #' @export
 
@@ -34,6 +35,12 @@ GeomSpring <- ggproto("GeomSpring", Geom,
 
       # Transform the input data to specify the spring paths
       cols_to_keep <- setdiff(names(data), c("x", "y", "xend", "yend"))
+
+      # Set default for tension, diameter if not supplied
+      data$diameter <- data$diameter %||% (.025 * abs(min(data$x) - max(data$x)))
+      data$springlength <- sqrt((data$x - data$xend)^2 + (data$y - data$yend)^2)
+      data$tension <-  data$tension %||% (1 * data$springlength)
+
       springs <- lapply(seq_len(nrow(data)), function(i) {
         spring_path <- create_spring(
           data$x[i],

@@ -58,7 +58,7 @@ ggplot(df, aes(x=x, y=y)) +
   scale_y_continuous(breaks = 1:N) +
   annotate("text", x = xbar, y = N + 1,
            label = "Moveable\nrod", size = 5,
-           , lineheight = 3/4) +
+           lineheight = 3/4) +
   theme_minimal(base_size = 15)
 
 # centroid by springs
