@@ -1,25 +1,29 @@
 Package: ggsprings
 Title: ggplot2 Extension to Draw Spring Paths
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person("Michael", "Friendly", , "friendly@yorku.ca", 
            role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3237-0941"))
 Description: ggsprings implements an extension of "geom_path"" which draws paths as springs instead of straight lines.
     Aside from possible artistic use, the main impetus for this is to draw points connected by springs,
-    with properties of length and tension, for use in illustrating least squares problems such as regression and
+    with properties of length and tension, for use in illustrating least squares problems such as the sample mean,
+    mutivariate centroid, linear and non-linear regression and
     principal components analysis.
 Encoding: UTF-8
 Language: en-US
 Depends: ggplot2
 Imports: 
     rlang (>= 1.1.0)
+Suggests: 
+    knitr,
+    rmarkdown,
+    tibble,
+    dplyr,
+    tinytable
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 URL: https://github.com/friendly/ggsprings
 BugReports: https://github.com/friendly/ggsprings/issues
 License: GPL (>= 3)
-Suggests: 
-    knitr,
-    rmarkdown
 VignetteBuilder: knitr

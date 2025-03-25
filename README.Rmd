@@ -118,7 +118,7 @@ features.
 
 * Make a hex logo
 
-* Write a vignette explaining the connection between least squares and springs better. In particular,
+* [begun] Write a vignette explaining the connection between least squares and springs better. In particular,
 
   + Illustrate a sample mean by springs: This is the point where positive and negative deviations
   sum to zero $\Sigma (x - \bar{x}) = 0$, and also minimizes the sum of squares, $\Sigma (x - \bar{x})^2$.
@@ -131,7 +131,7 @@ features.
 Some basic examples top show what is working:
 
 
-```{r}
+```{r example1}
 library(ggsprings)
 library(ggplot2)
 library(tibble)
@@ -152,10 +152,11 @@ ggplot(df) +
                   color = class),
               linewidth = 2) 
 
+```
 
-# Using tension and diameter as aesthetics
+Using tension and diameter as aesthetics
 
-
+```{r example2}
 df <- tibble(
   x = runif(5, max = 10),
   y = runif(5, max = 10),
@@ -163,7 +164,7 @@ df <- tibble(
   yend = runif(5, max = 10),
   class = sample(letters[1:2], 5, replace = TRUE),
   tension = runif(5),
-  diameter = runif(5, 0.5, 1.5)
+  diameter = runif(5, 0.25, 0.75)
 )
 
 ggplot(df, aes(x, y, xend = xend, yend = yend)) +

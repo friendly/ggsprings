@@ -36,24 +36,37 @@ a single "best" estimate. Some of the best names in mathematics are associated w
 Newton, Laplace, Legendre, Gauss. @Stigler:1981 recounts some of this history.
 
 It's original application was to justify the use of the arithmetic average $\bar{x}$ as the value
-that gave the smallest sum of squares of errors $\text{SSE} =\Sigma (x - \bar{x})^2$m but the same principle
-gives solutions for linear least squares regression, multiple regression, smoothing spline and non-linear models,
+that gave the smallest sum of squares of errors $\text{SSE} =\Sigma (x - \bar{x})^2$, but the same principle
+gives solutions for linear least squares regression, multiple regression, smoothing splines and non-linear models,
 all the way to exploratory factor analysis.
 
 As a mathematical method of estimation, least squares is also remarkably versatile in the variety of methods of proof
 that can justify it's application. Minimization of the sum of squares of errors can be solved by calculus or
-by a simple geometric argument. But it is the purpose of this vignette to show how least squares problems can be
+by a simple geometric argument. It is the purpose of this vignette to show how least squares problems can be
 solved by springs. No need to invoke a function minimization algorithm or solve a system of equations. Just
 connect your observations to what you want to estimate with springs, and _bingo!_, let the springs give the answer.
 
-### Hooke's Law, potential energy and force
+<!-- But first, it useful to -->
 
+## Hooke's Law, potential energy and force
 
-**Linear springs**
+The application of springs to problems in statistics depends on understanding the physics of springs
+and physical systems more generally, using the concepts of potential energy, forces applied by physical
+objects and how these can balance in a state of equilibrium.
+
+### Linear springs
 A linear spring is the one whose tension
 is directly proportional to its length: stretching such a spring
 to a length $x$ requires the force $F(x) = k\;x$. Force acts in a given direction, so compressing a spring
-requires a force $- k\;x$
+requires a force $- k\;x$. This is illustrated in the figure below, where $x$ indicates the stretching of a spring.
+
+```{r}
+#| label: fig-hookes-law
+#| echo: false
+#| out-width: "50%"
+knitr::include_graphics(here::here("man/figures/Hookes-law-springs.png"))
+```
+
 
 Here the multiplier $k$ is a constant (called the Hooke’s constant) that characterizes a particular spring. A small $k$
 means a lax spring, while a large $k$ means a stiff spring. By convention, the unstretched length of such a spring is zero.
@@ -61,15 +74,29 @@ means a lax spring, while a large $k$ means a stiff spring. By convention, the u
 In the ggSprings package to date, all observations are considered to have the same, arbitrary spring constant. Allowing these
 to vary, with a `weight` aesthetic would be a natural way to implement weighted least squares.
 
-- Functions, energy, force
+### Functions, energy, force
 
+A spring is something that acts elastically, meaning that it stores (potential) energy if you either stretch it or compress it. How much energy it stores is proportional to the square of the
+distance it is stretched or compressed.
+
+$$
+P(x) = \frac12 k \; x^2
+$$
+In this notation, the force exerted by a spring, $F(x)$ can be seen as derivative, or slope at $x$
+of potential energy,
+
+$$
+F(x) = \frac{d}{dx} \left( \frac12 k \; x^2 \right)= k \; x
+$$
+
+The general relations between mathematics and physics are shown in the table below [@Levi2009, p.27].
 ```{r echo = FALSE}
 tbl <- tibble::tribble(
-  ~Mathematics,   ~Physical,
+  ~Mathematics,   ~Physics,
   "function, $f (x)$",          "potential energy, $P(x)$",
   "derivative, $f\\prime (x)$",  "force, $F(x) = -P\\prime(x)$",
-  "$\\argmin_x f(x) \\implies f\\prime (x) = 0$",
-          "equilibrium, $\\argmin_x P(x) \\implies F (x) = 0$"
+  "$\\min_x f(x) \\implies f\\prime (x) = 0$",
+          "equilibrium, $\\min_x P(x) \\implies F (x) = 0$"
   )
 
 tt(tbl)
