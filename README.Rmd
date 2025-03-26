@@ -1,5 +1,7 @@
 ---
-output: github_document
+output: 
+  github_document:
+    toc: TRUE
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -16,6 +18,7 @@ knitr::opts_chunk$set(
 
 options(digits=3)
 
+library(tidyverse)
 ```
 
 <!-- badges: start -->
@@ -29,7 +32,7 @@ options(digits=3)
 implement an extension of `geom_path` which draws paths as springs instead of straight lines.
 Aside from possible artistic use, the main impetus for this is to draw points connected by springs,
 with properties of length, diameter and tension. The initial code for this comes from
-[ggplot2: Elegant Graphics for Data Analysis (3e), Ch. 21](https://ggplot2-book.org/ext-springs)
+[ggplot2: Elegant Graphics for Data Analysis (3e), Ch. 21: A Case Study (springs) ](https://ggplot2-book.org/ext-springs)
 
 A leading example is to illustrate how least squares regression
 is "solved" by connecting data points to a rod, where the springs are constrained to be vertical.
@@ -125,14 +128,66 @@ features.
   + Illustrate least squares regression in relation to the the normal equations, 
 
 
+---
+
+## What's inside
+
+### create_spring.R
+
+```{r, code = readLines("R/create_spring.R")}
+
+
+
+```
+
+### StatSpring.R
+
+```{r, code = readLines("R/StatSpring.R")}
+
+
+
+```
+
+
+### GeomSpring.R 
+
+[Documentation Q&A from ](https://github.com/ggplot2-extenders/ggplot-extension-club/discussions/83#discussioncomment-12480523) @friendly and @teunbrand
+
+> I don't quite know how to document a ggproto
+
+They are usually accompanied by @export, @format NULL and @usage NULL roxygen tags and refer with @rdname to a pretty generic piece of documentation stating that these are ggproto classes used for extending ggplot2 and are not intended to be used by users directly.
+An example of that from one of my extensions can be found here: https://github.com/teunbrand/ggh4x/blob/main/R/ggh4x_extensions.R
+
+
+```{r, code = readLines("R/GeomSpring.R")}
+
+
+
+```
+
+
+### geom_spring.R (contains `stat_spring()`) 
+
+[Documentation Q&A from ](https://github.com/ggplot2-extenders/ggplot-extension-club/discussions/83#discussioncomment-12480523) @friendly and @teunbrand
+
+> to use @inheritParams for ggplot2 extensions
+
+If you're going for a geom_spring(), you can use something like @inheritParams ggplot2::geom_path or other geom that maximises overlap between arguments.
+
+
+```{r, code = readLines("R/geom_spring.R")}
+
+
+
+```
 
 ## Example
 
 Some basic examples top show what is working:
 
 
-```{r example1}
-library(ggsprings)
+```{r example1, eval = T}
+# library(ggsprings)
 library(ggplot2)
 library(tibble)
 #library(dplyr)
@@ -156,7 +211,7 @@ ggplot(df) +
 
 Using tension and diameter as aesthetics
 
-```{r example2}
+```{r example2, eval = T}
 df <- tibble(
   x = runif(5, max = 10),
   y = runif(5, max = 10),
@@ -172,6 +227,24 @@ ggplot(df, aes(x, y, xend = xend, yend = yend)) +
                   diameter = diameter,
                   color = class),
               linewidth = 1.2) 
+```
+
+
+
+
+# Packaging
+
+```{r, eval = F}
+devtools::check(".")
+devtools::install(pkg = ".", upgrade = "never") 
+```
+
+# Vignettes
+
+## vignettes/least-squares.Rmd
+
+```{r, child = "vignettes/least-squares.Rmd"}
+
 ```
 
 ## Related 
