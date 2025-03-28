@@ -37,6 +37,7 @@ GeomSpring <- ggproto("GeomSpring", Geom,
       cols_to_keep <- setdiff(names(data), c("x", "y", "xend", "yend"))
 
       # Set default for tension, diameter if not supplied
+      # TODO: add a weight aesthetic, defaulting to, say, 0.025 to allow weighted least squares
       data$diameter <- data$diameter %||% (.025 * abs(min(data$x) - max(data$x)))
       data$springlength <- sqrt((data$x - data$xend)^2 + (data$y - data$yend)^2)
       data$tension <-  data$tension %||% (1 * data$springlength)

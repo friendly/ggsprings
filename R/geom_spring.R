@@ -84,6 +84,8 @@ geom_spring <- function(mapping = NULL,
 #' @param geom     The \code{geom} used to draw the spring segment
 #  @param position
 #  @param ...
+#' @param diameter Diameter of the spring, i.e., the diameter of a circle that is stretched into a spring shape.
+#' @param tension  Spring tension constant. This is calibrated as the total distance moved from the start point to the end point, divided by the size of the generating circle.
 #' @param n        Number of points
 #  @param na.rm
 #  @param show.legend
@@ -99,8 +101,8 @@ stat_spring <- function(mapping = NULL,
                         geom = "path",
                         position = "identity",
                         ...,
-                        # diameter = 1,
-                        # tension = 0.75,
+                        diameter = 1,
+                        tension = 0.75,
                         n = 50,
                         na.rm = FALSE,
                         show.legend = NA,

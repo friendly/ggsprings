@@ -116,7 +116,7 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
-\item{diameter}{Diameter of the spring, i.e., the diameter of a circle that is stretched into a spring shape}
+\item{diameter}{Diameter of the spring, i.e., the diameter of a circle that is stretched into a spring shape.}
 
 \item{tension}{Spring tension constant. This is calibrated as the total distance moved from the start point to the end point, divided by the size of the generating circle.}
 }

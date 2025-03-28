@@ -10,6 +10,8 @@ stat_spring(
   geom = "path",
   position = "identity",
   ...,
+  diameter = 1,
+  tension = 0.75,
   n = 50,
   na.rm = FALSE,
   show.legend = NA,
@@ -79,6 +81,10 @@ lists which parameters it can accept.
 \code{...}. This can be one of the functions described as
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
+
+\item{diameter}{Diameter of the spring, i.e., the diameter of a circle that is stretched into a spring shape.}
+
+\item{tension}{Spring tension constant. This is calibrated as the total distance moved from the start point to the end point, divided by the size of the generating circle.}
 
 \item{n}{Number of points}
 
