@@ -366,9 +366,7 @@ GeomSpring <- ggproto("GeomSpring", Geom,
       colour = "black",
       linewidth = 0.5,
       linetype = 1L,
-      alpha = NA,
-      diameter = 1,
-      tension = 0.75
+      alpha = NA
     )
 )
 ```
@@ -779,6 +777,34 @@ time, sequentially on the position of the moving point, and looping
 until nothing changes. Not sure how to program this with `gganimate`.
 
 ## Least squares regression
+
+Using tension and diameter defaults
+
+``` r
+set.seed(1234)
+N <- 10
+df <- tibble(
+  x = runif(N, 1, 10),
+  y = runif(N, 1, 10)
+)
+
+ggplot(df) +
+  aes(x = x, y = y,
+      xend = mean(x),
+      yend = mean(y)) +
+  geom_point(size = 5, color = "red") +
+  geom_spring(color = "blue",
+              linewidth = 1.2) +
+  geom_point(aes(x = mean(x), y = mean(y)), 
+             size = 7,
+             shape = 15,
+             color = "black") +
+  scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(breaks = 1:10) +
+  theme_minimal(base_size = 15) 
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 ## Related
 

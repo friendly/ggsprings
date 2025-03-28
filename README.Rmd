@@ -247,6 +247,34 @@ devtools::install(pkg = ".", upgrade = "never")
 
 ```
 
+Using tension and diameter defaults
+
+```{r}
+set.seed(1234)
+N <- 10
+df <- tibble(
+  x = runif(N, 1, 10),
+  y = runif(N, 1, 10)
+)
+
+ggplot(df) +
+  aes(x = x, y = y,
+      xend = mean(x),
+      yend = mean(y)) +
+  geom_point(size = 5, color = "red") +
+  geom_spring(color = "blue",
+              linewidth = 1.2) +
+  geom_point(aes(x = mean(x), y = mean(y)), 
+             size = 7,
+             shape = 15,
+             color = "black") +
+  scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(breaks = 1:10) +
+  theme_minimal(base_size = 15) 
+
+
+```
+
 ## Related 
 
 * An [interactive demo](https://www.desmos.com/calculator/90vaqtqpx6) by Trey Goesh allows you to 
