@@ -29,7 +29,7 @@
 #  @param stat
 #  @param position
 #  @param ...
-#' @param diameter Diameter of the spring, i.e., the diameter of a circle that is stretched into a spring shape
+#' @param diameter Diameter of the spring, i.e., the diameter of a circle that is stretched into a spring shape.
 #' @param tension  Spring tension constant. This is calibrated as the total distance moved from the start point to the end point, divided by the size of the generating circle.
 #' @param n        Number of points
 #  @param arrow

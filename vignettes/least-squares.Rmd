@@ -110,7 +110,7 @@ The sample mean has several nice physical analogs, which stem from the propertie
 
 * the sum of deviations ($e_i$) of observations ($x_i$) from the mean $\bar{x}$ equals 0: $\Sigma_i e_i =\Sigma_i ( x_i - \bar{x} ) = 0$.
 
-* the sum of squared deviations is the smallest for any choice of $\bar{x}$, $\bar{x} = \argmin_{\bar{x}} ( x_i - \bar{x} )^2$
+* the sum of squared deviations is the smallest for any choice of $\bar{x} = \min_{\bar{x}} ( x_i - \bar{x} )^2$
 
 ### Demonstration using springs
 
