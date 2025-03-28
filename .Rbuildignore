@@ -3,3 +3,5 @@
 examples/
 README.*
 ^LICENSE\.md$
+^doc$
+^Meta$
