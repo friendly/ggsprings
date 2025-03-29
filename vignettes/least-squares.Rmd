@@ -2,7 +2,12 @@
 title: "Least Squares By Springs"
 author: "Michael Friendly"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  bookdown::html_document2:
+    base_format: rmarkdown::html_vignette
+    number_sections: false
+    toc: true
+bibliography: "references.bib"
 vignette: >
   %\VignetteIndexEntry{Least Squares By Springs}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,6 +23,7 @@ knitr::opts_chunk$set(
 )
 options(digits=4)
 par(mar=c(3,3,1,1)+.1)
+options(tinytable_html_mathjax = TRUE)
 ```
 
 ```{r setup, include=FALSE}
@@ -27,13 +33,28 @@ library(tinytable)
 library(dplyr)
 ```
 
+
+```{=html}
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+```
+
 ## Introduction
 
 The method of least squares fitting is remarkable in its versatility. It grew out of practical problems in astronomy
 (the orbits of planets, librations of the moon) and geodesy (finding the "shape" of the earth), where astronomers and mathematicians sought
 to find a way to combine a collection of fallible observations (angular separation between stars) into a
 a single "best" estimate. Some of the best names in mathematics are associated with this discovery:
-Newton, Laplace, Legendre, Gauss. @Stigler:1981 recounts some of this history.
+Newton, Laplace, Legendre, Gauss. @Stigler1981 recounts some of this history.
 
 It's original application was to justify the use of the arithmetic average $\bar{x}$ as the value
 that gave the smallest sum of squares of errors $\text{SSE} =\Sigma (x - \bar{x})^2$, but the same principle
@@ -64,6 +85,8 @@ requires a force $- k\;x$. This is illustrated in the figure below, where $x$ in
 #| label: fig-hookes-law
 #| echo: false
 #| out-width: "50%"
+#| fig-align: center
+#| fig-cap: "Hooke's Law for springs. The force required to stretch the spring is proportional to the extension, $x$, represented by the weights. _Source_: [Wikipedia](https://en.wikipedia.org/wiki/Hooke%27s_law)"
 knitr::include_graphics(here::here("man/figures/Hookes-law-springs.png"))
 ```
 
@@ -82,14 +105,15 @@ distance it is stretched or compressed.
 $$
 P(x) = \frac12 k \; x^2
 $$
-In this notation, the force exerted by a spring, $F(x)$ can be seen as derivative, or slope at $x$
+In this notation, the force exerted by a spring, $F(x)$ can be seen as the (negative) derivative, or slope at $x$
 of potential energy,
 
 $$
-F(x) = \frac{d}{dx} \left( \frac12 k \; x^2 \right)= k \; x
+F(x) = -\frac{d}{dx} \left( \frac12 k \; x^2 \right)= -k \; x
 $$
-
+A spring is at equilibrium when the potential energy is minimized, or the force exerted is zero.
 The general relations between mathematics and physics are shown in the table below [@Levi2009, p.27].
+
 ```{r echo = FALSE}
 tbl <- tibble::tribble(
   ~Mathematics,   ~Physics,
@@ -102,6 +126,68 @@ tbl <- tibble::tribble(
 tt(tbl)
 ```
 
+These relations are illustrated in the figure below, where positive $x$ means the spring is stretched and negative $x$
+represents compression. When the spring is stretched to $x = 3$, the potential energy is $P(x) = \frac12 (3^2) = 4.5$.
+The line through $(3, 4.5)$ tangent to the curve has slope 
+$P^\prime (x) = x = 3$
+so the force the spring exerts is $F(x) = -3$, where the negative sign means a force in the direction of $x=0$.
+
+```{r}
+#| label: fig-potential
+#| echo: false
+#| out-width: "50%"
+#| fig-align: center
+#| fig-cap: "Potential energy and force of a spring."
+# quadratic for potential energy
+
+k <- 1/2
+x <- seq(-6, 6, 0.5)
+Px <- k * x^2
+
+linepts <- function(a, b, x) {
+  y <- a + b * x
+  data.frame(x,y)
+}
+
+op <- par(mar = c(4,4,1,1)+.5)
+plot(x, Px,
+     type = "l",
+     lwd = 2,
+     axes = FALSE,
+     ylab = "",
+     cex.lab = 2)
+axis(1)
+axis(2)
+abline(v=0, lwd = 1.2)
+text(0, 18, "P(x)", cex = 2, xpd = TRUE)
+
+# line through (3, 4.5), extending from x=2 to x=4
+#   slope = d k X^2 / dx = X = 3
+#   -> y - 4.5 = 3 * (x - 3) -> y = 3 X - 9
+pts <- linepts(-4.5, 3, c(1.5, 3, 4.5))
+
+lines(pts, col = "blue", lwd = 3)
+points(pts[2,], pch = 16, cex= 2.3, col = "red")
+
+text(-3, 14, expression(P(x) == frac(1,2) * X^2), cex = 1.2)
+text(-2.8, 12, expression(F(x) == -dP/dx ), cex = 1.2)
+
+points(0, 0, pch = 16, cex= 1.5, col = "red")
+segments(x0 = -1.2, x1 = 1.2,
+         y0 = 0, y1 = 0, col = "blue", lwd=2)
+
+text(4 + c(0, .5), 6 + c(-0.6, -3),
+     c(expression(F(x) == -dP/dx),
+       expression(F(x) == - slope)),
+     cex = 1.4,
+     srt = 60,
+     col = "blue",
+     xpd = TRUE)
+par(op)
+```
+
+The horizontal line through $(0, 0)$, that is, when $x = 0$ illustrates equilibribum where potential energy
+is minimized, and the force (slope) is $F(0) = 0$.
 
 ## Mean of a sample
 
@@ -215,3 +301,20 @@ One way to animate this would be to imagine the springs acting one at a time, se
 
 ## Least squares regression
 
+For linear least squares regression, we have a collection of points $(x_i, y_i)$, and it is desired to fit a 
+"best" line $y = a + b \times x$ that makes the sum of squares of errors,
+$$
+\text{RSS} (a,b) = \Sigma \left[y_i - (a + b \times x_i) \right]^2 = \Sigma e_i^2
+$$
+as small as possible. The representation by springs is shown
+
+```{r}
+#| label: fig-levi-least-sq-springs
+#| echo: false
+#| out-width: "70%"
+#| fig-align: center
+#| fig-cap: " _Source_: [@Levi2009, p. 33]"
+knitr::include_graphics(here::here("man/figures/levi-least-sq-springs.png"))
+```
+
+## References

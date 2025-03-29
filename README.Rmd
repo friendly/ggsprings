@@ -37,7 +37,7 @@ The mathematics behind this are well-described in this [Math Stackexchange post]
 where the least squares estimates of intercept and slope are shown to be the equilibrium position that minimized the sum of forces
 and torques exerted by springs.
 
-![](man/figures/potential-energy.png)
+![](man/figures/levi-least-sq-springs.png)
 
 If the springs are allowed to be free, the physical solution is the major PCA axis.
 
