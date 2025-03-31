@@ -67,7 +67,50 @@ by a simple geometric argument. It is the purpose of this vignette to show how l
 solved by springs. No need to invoke a function minimization algorithm or solve a system of equations. Just
 connect your observations to what you want to estimate with springs, and _bingo!_, let the springs give the answer.
 
-<!-- But first, it useful to -->
+# A mechanical solution
+Among the earliest demonstrations of solving least squares problems by springs, @GainesPalphrey:1932
+included the following figures to illustrate a remarkable physical device for
+fitting a linear relation $y = a + b x$ to observations. In the left figure, seven uniform springs placed at $x = 0 : 6$
+are suspended
+from the observed values $y_i = 5$ and from these light bands are connected to a heavy stepped plumb wheel. The dotted horizontal
+line represented the least squares fit; it goes through the mean $\bar{y} = 5$ and has the equation $\hat{y} = 5 + 0 x$.
+The number gauge at the left allows one to read the intercept, $a = 5$ and from the scale markings on the wheel
+one can read the slope, $b = 0$.
+
+```{r}
+#| label: fig-Gaines-fig2
+#| echo: false
+#| out-width: "60%"
+#| fig-align: center
+#| fig-cap: "Diagrams to illustrate the use of springs in fitting a linear regression relation. Left: all observed $y$
+#|       values are the same ($y = 5$); right: $y_i = \\{9, 6, 8, 4, 4, 1, 3\\}$. The equation of the line can be read
+#|       from the scale at the left for the intercept and the scale on the wheel for the slope."
+knitr::include_graphics(here::here("man/figures/Gaines-fig2.png"))
+```
+
+In the figure at the right the $y$ values are $y_i = \{9, 6, 8, 4, 4, 1, 3\}$ which has the same sum, $\Sigma y = 35$
+The dotted fitted line again passes through the mean $\bar{y} = 5$. The springs connecting the points to the fitted
+line are stretched or compressed by their deviations, $e_i = y_i - \hat{y}$, and for equilibrium these
+deviations must sum to zero, $\Sigma e_i = 0$. Each spring stores potential energy proportional to $e_i^2$ and
+the system is in equilibrium when the sum of energies, $\Sigma e_i^2$ is at its minimum.
+
+For this problem, `lm()` gives $\hat{y} = 8.43 - 1.143 \;x$ and these values can be read approximately from the device.
+
+```{r}
+x <- 0:6
+y <- c(9, 6, 8, 4, 4, 1, 3)
+lm(y~x) |> coef()
+```
+
+In reaching equilibrium, the weighted wheel is rotated through an angle proportional to the slope, $b$,
+whose value is shown on the scale for the wheel. The intercept is the value shown on the scale at the left for the
+line at $x=0$.
+
+Thus, the spring diagram illustrates mechanically the properties of the least squares solution:
+
+1. The fitted line passes through the central value $\bar{x}$ at the value of the mean $\bar{y}$ of the $y_i$.
+2. The algebraic sum of the deviations from the line is zero, $\Sigma e_i = \Sigma (y_i - \bar{y}) = 0$.
+3. The sum of squares of the deviations $\Sigma e_i^2$ is minimum.
 
 ## Hooke's Law, potential energy and force
 
@@ -170,15 +213,15 @@ lines(pts, col = "blue", lwd = 3)
 points(pts[2,], pch = 16, cex= 2.3, col = "red")
 
 text(-3, 14, expression(P(x) == frac(1,2) * X^2), cex = 1.2)
-text(-2.8, 12, expression(F(x) == -dP/dx ), cex = 1.2)
+text(-2.8, 12, expression(F(x) == 2 * X), cex = 1.2)
 
 points(0, 0, pch = 16, cex= 1.5, col = "red")
 segments(x0 = -1.2, x1 = 1.2,
          y0 = 0, y1 = 0, col = "blue", lwd=2)
 
-text(4 + c(0, .5), 6 + c(-0.6, -3),
+text(4 + c(0, .5), 6 + c(-0.7, -3),
      c(expression(F(x) == -dP/dx),
-       expression(F(x) == - slope)),
+       expression(F(x) == - slope[x])),
      cex = 1.4,
      srt = 60,
      col = "blue",

@@ -11,4 +11,30 @@ anscombe |>
 last_plot() +
   aes(x = x2, y = y2)
 
-# etc
+# ----------
+
+model <- lm(y1 ~ x1, data = anscombe)
+
+anscombe <- anscombe |>
+  mutate(fitted = predict(model),
+         diameter = 0.5)
+
+anscombe |>
+  ggplot() +
+  aes(x = x1, y = y1) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE) +
+  geom_spring(xend = x1,
+              yend = fitted,
+              diameter = diameter)
+
+
+  # geom_spring(aes(x = gdpPercap,
+  #                 xend = gdpPercap,
+  #                 y = lifeExp,
+  #                 yend = yhat,
+  #                 diameter = diameter,
+  #                 tension = tension), color = "darkgray") +
+
+
+
