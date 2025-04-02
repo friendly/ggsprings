@@ -529,7 +529,7 @@ For regression problems, it is inconvenient to have to fit the same model that h
 and add the `fitted` value to the dataset. The [ggsmoothfit repo](https://github.com/EvaMaeRey/ggsmoothfit/)
 provides convienient functions, `geom_smooth_fit()` and `geom_smooth_residuals()` that provide some useful methods,
 and the [README file](https://github.com/EvaMaeRey/ggsmoothfit/blob/main/README.md) defines a `GeomSmoothSpring`
-that has this capability. However, this is not a package that can be installed from GitHub,
+that has this capability. However, this is _not_ a package that can be installed from GitHub,
 and the implementation there depends on another package [statexpress](https://github.com/EvaMaeRey/statexpress)
 
 
@@ -558,5 +558,35 @@ ggplot(ans_aug) +
             linewidth = 1)
 ```
 
+### Smoothing methods & families
+It is also important to be able to construct spring plots for _any model method_ that can be represented
+by `geom_smooth(method = AA, formula = y ~ BB)`, where:
+
+* `method` can be: `lm`, `glm`, `loess` or nearly any other fitting function, such as `MASS::rlm` for robust fits
+or `mgcv::gam` for generalized additive models,
+(**TODO**: Another reason to implement an observation `weight` aesthetic param.)
+
+* `formula` can be any model formula involving only `y` and `x`, such as `y ~ x` or `y ~ poly(x, 2)` or even `y ~ splines::ns(x, df =)`
+
+
+
+For example @GainesPalphrey:1932 actually constructed the machine shown in the figure \@ref{fig:Gaines-fig1}
+for fitting the relation $y = A \; e^{-k x}$ This solved a practical agricultural problem:
+
+> Breeders of dairy cattle are accumulating a large body of yearly records of production based on the milk yield and fat test of individual cows by calendar months. The problem is to measure the rate of milk secretion for each cow by fitting the data of the first _eleven_ full months of lactation with the equation $y = A \; e^{-k x}$, in which $y$ is milk-energy yield per day, and $x$ is time in months with origin at one month after calving.
+
+
+```{r}
+#| label: Gaines-fig1
+#| echo: false
+#| out-width: "60%"
+#| fig-align: center
+#| fig-cap: "A mechanical spring-driven curve fitting machine,"
+knitr::include_graphics(here::here("man/figures/Gaines-fig1.png"))
+```
+
+For this figure, they say, "When the eleven stops, representing the observed
+y's, are set the machine immediately indicates
+the fitted $A$ and $k$ constants".
 
 ## References
