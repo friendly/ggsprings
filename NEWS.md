@@ -2,5 +2,7 @@
 
 * Under-development version, still trying to pass R Cmd check
 * delete tension and diameter from `GeomSpring` proto `default_aes` per PR#1 (thx: @EvaMaeRay)
-* work on `vignettes/least-squares.Rmd` in progress
+* work on `vignettes/least-squares.Rmd` nearly done.
+* Fix documentation problems for optional parameters per PR#2 (thx: @teunbrand)
+
 
