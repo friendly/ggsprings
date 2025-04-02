@@ -33,9 +33,16 @@ model <- lm(y1 ~ x1, data = anscombe)
 anscombe <- anscombe |>
   mutate(fitted = predict(model))
 
+# doesn't work this way because the original anscombe w/o fitted was captured in simple plot
 simple_plot +
   geom_spring(aes(xend = x1,
                   yend = fitted),
+              color = "blue",
+              linewidth = 1)
+
+simple_plot +
+  geom_spring(data=anscombe,
+              aes(xend = x1, yend = fitted),
               color = "blue",
               linewidth = 1)
 
