@@ -7,6 +7,7 @@
 #' but uses a spring instead of a line.
 #'
 #' @inheritParams ggplot2::geom_path
+#' @param n Number of points
 #'
 #' @section Aesthetics:
 #' geom_spring understands the following aesthetics (required aesthetics are in bold):
@@ -22,22 +23,17 @@
 #' - linetype
 #' - alpha
 #' - lineend
-
+#'
+#' The additional aesthetics are explained below:
+#' \describe{
+#'   \item{diameter}{Diameter of the spring, i.e., the diameter of a circle
+#'   that is stretched into a spring shape.}
+#'   \item{tension}{Spring tension constant. This is calibrated as the total
+#'   distance moved from the start point to the end point, divided by the size
+#'   of the generating circle.}
+#' }
+#'
 #' @importFrom ggplot2 layer
-#  @param mapping
-#  @param data
-#  @param stat
-#  @param position
-#  @param ...
-#' @param diameter Diameter of the spring, i.e., the diameter of a circle that is stretched into a spring shape.
-#' @param tension  Spring tension constant. This is calibrated as the total distance moved from the start point to the end point, divided by the size of the generating circle.
-#' @param n        Number of points
-#  @param arrow
-#  @param lineend
-#  @param linejoin
-#  @param na.rm
-#  @param show.legend
-#  @param inherit.aes
 #'
 #' @return A ggplot2 layer
 #' @export
@@ -65,7 +61,6 @@ geom_spring <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      n = n,
       arrow = arrow,
       lineend = lineend,
       linejoin = linejoin,
