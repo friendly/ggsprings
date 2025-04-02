@@ -75,6 +75,9 @@ GeomSpring <- ggproto("GeomSpring", Geom,
       colour = "black",
       linewidth = 0.5,
       linetype = 1L,
-      alpha = NA
+      alpha = NA,
+      # By marking these as NULL, we mark them as optional
+      diameter = NULL,
+      tension = NULL
     )
 )
