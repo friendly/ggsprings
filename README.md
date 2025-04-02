@@ -4,6 +4,9 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Last
+Commit](https://img.shields.io/github/last-commit/friendly/ggsprings)](https://github.com/friendly/ggsprings)
+
 <!-- badges: end -->
 
 # ggsprings
@@ -24,7 +27,7 @@ where the least squares estimates of intercept and slope are shown to be
 the equilibrium position that minimized the sum of forces and torques
 exerted by springs.
 
-![](man/figures/potential-energy.png)
+![](man/figures/levi-least-sq-springs.png)
 
 If the springs are allowed to be free, the physical solution is the
 major PCA axis.
@@ -111,12 +114,21 @@ You can install the current version of `ggsprings` from this repo,
 
 - Make a hex logo
 
-- Write a vignette explaining the connection betweem least squares and
-  springs better.
+- \[begun\] Write a vignette explaining the connection between least
+  squares and springs better. In particular,
+
+  - Describe the background physics of springs, forces, energy and some
+    of it’s history \[done\]
+  - Illustrate a sample mean by springs: This is the point where
+    positive and negative deviations \[done\] sum to zero
+    $\Sigma (x - \bar{x}) = 0$, and also minimizes the sum of squares,
+    $\Sigma (x - \bar{x})^2$.
+  - Illustrate least squares regression in relation to the the normal
+    equations,
 
 ## Example
 
-Some basic examples top show what is working:
+Some basic examples to show what is working:
 
 ``` r
 library(ggsprings)
@@ -140,14 +152,11 @@ ggplot(df) +
               linewidth = 2) 
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-example1-1.png" width="100%" />
+
+Using tension and diameter as aesthetics
 
 ``` r
-
-
-# Using tension and diameter as aesthetics
-
-
 df <- tibble(
   x = runif(5, max = 10),
   y = runif(5, max = 10),
@@ -155,7 +164,7 @@ df <- tibble(
   yend = runif(5, max = 10),
   class = sample(letters[1:2], 5, replace = TRUE),
   tension = runif(5),
-  diameter = runif(5, 0.5, 1.5)
+  diameter = runif(5, 0.25, 0.75)
 )
 
 ggplot(df, aes(x, y, xend = xend, yend = yend)) +
@@ -165,7 +174,7 @@ ggplot(df, aes(x, y, xend = xend, yend = yend)) +
               linewidth = 1.2) 
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-2.png" width="100%" />
+<img src="man/figures/README-example2-1.png" width="100%" />
 
 ## Related
 

@@ -20,6 +20,8 @@ options(digits=3)
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Last Commit](https://img.shields.io/github/last-commit/friendly/ggsprings)](https://github.com/friendly/ggsprings)
+
 <!-- badges: end -->
 
 # ggsprings
@@ -120,7 +122,8 @@ features.
 
 * [begun] Write a vignette explaining the connection between least squares and springs better. In particular,
 
-  + Illustrate a sample mean by springs: This is the point where positive and negative deviations
+  + Describe the background physics of springs, forces, energy and some of it's history [done]
+  + Illustrate a sample mean by springs: This is the point where positive and negative deviations [done]
   sum to zero $\Sigma (x - \bar{x}) = 0$, and also minimizes the sum of squares, $\Sigma (x - \bar{x})^2$.
   + Illustrate least squares regression in relation to the the normal equations, 
 
@@ -128,7 +131,7 @@ features.
 
 ## Example
 
-Some basic examples top show what is working:
+Some basic examples to show what is working:
 
 
 ```{r example1}

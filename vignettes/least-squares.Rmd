@@ -7,6 +7,10 @@ output:
     base_format: rmarkdown::html_vignette
     number_sections: false
     toc: true
+    self_contained: true
+    math_method:
+      engine: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 bibliography: "references.bib"
 vignette: >
   %\VignetteIndexEntry{Least Squares By Springs}
@@ -31,9 +35,10 @@ library(ggsprings)
 library(tibble)
 library(tinytable)
 library(dplyr)
+library(matlib)
 ```
 
-
+<!--
 ```{=html}
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script>
@@ -46,6 +51,15 @@ MathJax = {
   }
 };
 </script>
+```
+-->
+
+
+```{r}
+#| echo: false
+#| out-width: "70%"
+#| fig-align: center
+knitr::include_graphics(here::here("man/figures/horizontal-spring2.png"))
 ```
 
 ## Introduction
@@ -62,12 +76,16 @@ gives solutions for linear least squares regression, multiple regression, smooth
 all the way to exploratory factor analysis.
 
 As a mathematical method of estimation, least squares is also remarkably versatile in the variety of methods of proof
-that can justify it's application. Minimization of the sum of squares of errors can be solved by calculus or
-by a simple geometric argument. It is the purpose of this vignette to show how least squares problems can be
-solved by springs. No need to invoke a function minimization algorithm or solve a system of equations. Just
+that can justify it's application. Minimization of the sum of squares of errors can be solved by 
+calculus, linear algebra or by numerical optimization and even by a simple geometric argument. 
+
+It is the purpose of this vignette to show how least squares problems can also be
+solved by the physics of springs and a bit of the history of this idea. 
+No need to invoke a function minimization algorithm, invert a matrix,
+or solve a system of equations. Just
 connect your observations to what you want to estimate with springs, and _bingo!_, let the springs give the answer.
 
-# A mechanical solution
+### A mechanical solution
 Among the earliest demonstrations of solving least squares problems by springs, @GainesPalphrey:1932
 included the following figures to illustrate a remarkable physical device for
 fitting a linear relation $y = a + b x$ to observations. In the left figure, seven uniform springs placed at $x = 0 : 6$
@@ -229,7 +247,7 @@ text(4 + c(0, .5), 6 + c(-0.7, -3),
 par(op)
 ```
 
-The horizontal line through $(0, 0)$, that is, when $x = 0$ illustrates equilibribum where potential energy
+The horizontal line through $(0, 0)$, that is, when $x = 0$ illustrates equilibrium where potential energy
 is minimized, and the force (slope) is $F(0) = 0$.
 
 ## Mean of a sample
@@ -264,7 +282,9 @@ df <- df |>
          diameter = 0.2)
 ```
 
-Then, visualize this with springs: 
+Then, visualize this with springs. In the call to `geom_spring()` for this problem, the spring is specified to go
+from the value of `x` to `xend = xbar`, while setting `y` and `yend` to the value of `y`. A lot of code is devoted
+to making this a pretty figure.
 
 ```{r mean-springs}
 ggplot(df, aes(x=x, y=y)) +
@@ -304,14 +324,19 @@ df <- tibble(
   x = runif(N, 1, 10),
   y = runif(N, 1, 10)
 )
+```
 
+We'll want to calculate tension in relation to the distance from the centroid, given by $(\bar{x}, \bar{y})$, so calculate
+these now as `xbar`, `ybar`.
+```{r cent2}
 means <- colMeans(df)
 xbar <- means[1]; ybar <- means[2]
 ```
 
-Set the tension as the distance between the point and the mean:
+Then, for this example, we set the tension as the distance between the point and the mean, in the dataframe `df`
+so it can be used as an aesthetic in `geom_spring()`.
 
-```{r cent2}
+```{r cent3}
 df <- df |>
   mutate(tension = sqrt((x - xbar)^2 + (y - ybar)^2),
          diameter = 0.4)
@@ -347,17 +372,112 @@ One way to animate this would be to imagine the springs acting one at a time, se
 For linear least squares regression, we have a collection of points $(x_i, y_i)$, and it is desired to fit a 
 "best" line $y = a + b \times x$ that makes the sum of squares of errors,
 $$
-\text{RSS} (a,b) = \Sigma \left[y_i - (a + b \times x_i) \right]^2 = \Sigma e_i^2
+\text{RSS} (a,b) = \sum_i \; \left[y_i - (a + b \times x_i) \right]^2 = \sum_i e_i^2
 $$
-as small as possible. The representation by springs is shown
+as small as possible. The representation by springs is shown in 
+<!-- @fig-levi-least-sq-springs,  -->
+\@ref(fig:levi-least-sq-springs)
+where the observations are
+drawn as small ovals, connected to the fitted points on the line $y = a + b \times x$, realized by a rigid rod in the mechanical analog.
+The Guides represent vertical
+channels that force the springs to work only up or down in the vertical direction.
 
 ```{r}
-#| label: fig-levi-least-sq-springs
+#| label: levi-least-sq-springs
 #| echo: false
 #| out-width: "70%"
 #| fig-align: center
 #| fig-cap: " _Source_: [@Levi2009, p. 33]"
 knitr::include_graphics(here::here("man/figures/levi-least-sq-springs.png"))
 ```
+
+Minimizing the sum of squares of the spring lengths means minimizing the potential energy
+of the mechanical system, and consequently the rod is in
+equilibrium. This implies that the sum of (vertical) forces $F_i$ is zero,
+and that the sum of rotational forces, or torques around the intercept, $A$
+in the diagram is also zero.
+
+\begin{eqnarray}
+\sum_i F_i = 0     & \implies & \sum_i e_i = 0      (\#eq:force) \\
+\sum_i x_i F_i = 0 & \implies & \sum_i x_i e_i = 0  (\#eq:torque)
+\end{eqnarray}
+
+Substituting $e_i = y_i - (a + b x_i)$ gives what are recognized as the "normal equations" for the least squares solution,
+
+\begin{eqnarray*}
+\sum y_i - a \sum x_i - n b & = & 0 \\
+\sum x_i y_i - a \sum x_i^2 - b \sum x_i & = & 0
+\end{eqnarray*}
+
+or, rearranging terms,
+
+\begin{eqnarray*}
+a \sum x_i - n b          & = & \sum y_i \\
+a \sum x_i^2 - b \sum x_i & = & \sum x_i y_i
+\end{eqnarray*}
+
+These equations may be more recognizable in matrix form. 
+Letting $\mathbf{X} = [\mathbf{1},  \mathbf{x}]$
+and $\mathbf{b} = \begin{pmatrix} a \\ b \\ \end{pmatrix}$, we arrive at
+
+```{r}
+#| results: asis
+#| echo: false
+XPX <- matrix(c(
+  "n", "\\sum x",
+  "\\sum x", "\\sum x^2"), 2, 2)
+XPY <- matrix(c("\\sum y", "\\sum x y"), 2,1)
+b <- matrix(c("a", "b"), 2, 1)
+Eqn(latexMatrix(XPX, matrix = "bmatrix"),
+    latexMatrix(b),
+    "& =",
+    latexMatrix(XPY),
+    Eqn_newline(),
+    "\\mathbf{X}^\\top \\mathbf{X} \\mathbf{b}",
+    ' & =',
+    "\\mathbf{X}^\\top \\mathbf{y}",
+    align = TRUE
+)
+```
+
+from which the matrix solution is
+$$
+\widehat{\mathbf{b}} = ( \mathbf{X}^\top \mathbf{X})^{-1} \; \mathbf{X}^\top \mathbf{y} \; ,
+$$
+
+as long as $(\mathbf{X}^\top \mathbf{X})^{-1}$ exists, i.e., $ \text{det}(\mathbf{X}^\top \mathbf{X}) \ne 0$.
+
+### Geometric solution
+
+It is of interest to see how the solution using springs is equivalent to a geometric argument.
+\@ref(fig:least-squares-geometry) shows the vector space representation of a vector $\mathbf{y} of three observations.
+Any possible regression line corresponds to a vector $\boldsymbol{\beta} = (a, b)$ in the dashed plane
+that represents linear combinations of $\mathbf{X} = [\mathbf{1}, \mathbf{x}]$.
+The least squares solution is that which minimizes the length of the residual vector
+$\mathbf{y} - \widehat{\mathbf{y}} = \mathbf{e}$.
+
+```{r}
+#| label: least-squares-geometry
+#| echo: false
+#| out-width: "50%"
+#| fig-align: center
+#| fig-cap: "Geometrical interpretation of least squares regression. The vector $\\mathbf{y} to point A
+#| represents the data for three observations"
+knitr::include_graphics(here::here("man/figures/least-squares-geometry.png"))
+```
+
+From this diagram it can be seen that the residual vector must be orthogonal to $\mathbf{X} = [\mathbf{1}, \mathbf{x}]$, so,
+
+\begin{eqnarray*}
+\mathbf{X} \perp \mathbf{e} 
+ & \implies & \mathbf{X}^\top \mathbf{e} = 0 \\
+ & \implies &\mathbf{X}^\top (\mathbf{y}-\mathbf{X}\;\widehat{\mathbf{b}}) = 0 \\
+ & \implies &\mathbf{X}^\top \mathbf{y} = \mathbf{X}^\top \mathbf{X}\; \widehat{\mathbf{b}} \\
+ & \implies &\widehat{\mathbf{b}} = (\mathbf{X}^\top \mathbf{X}) ^\top \mathbf{X}^\top \mathbf{y}
+\end{eqnarray*}
+
+### Example
+
+
 
 ## References
