@@ -13,22 +13,35 @@ last_plot() +
 
 # ----------
 
-anscombe |>
-  ggplot() +
-  aes(x = x1, y = y1) +
-  geom_point(size = 5, color = "red") +
-  geom_smooth(method = lm) +
-  theme_minimal(base_size = 15)
-
-
+library(ggplot2)
 library(dplyr)
+data(anscombe)
+
+theme_set(theme_minimal(base_size = 16))
+
+simple_plot <-
+  ggplot(anscombe,
+         aes(x = x1, y = y1)) +
+  geom_point(size = 4, color = "red") +
+  geom_smooth(method = lm, formula = y~x,
+              se = FALSE,
+              linewidth = 1.4)
+simple_plot
+
 model <- lm(y1 ~ x1, data = anscombe)
 
 anscombe <- anscombe |>
   mutate(fitted = predict(model))
 
+simple_plot +
+  geom_spring(aes(xend = x1,
+                  yend = fitted),
+              color = "blue",
+              linewidth = 1)
 
-ggplot(data = anscombe, aes(x = x1, y = y1)) +
+
+
+  ggplot(data = anscombe, aes(x = x1, y = y1)) +
   geom_point(size = 5, color = "red") +
   stat_smooth(method = "lm", se = FALSE) +
   geom_spring(aes(xend = x1,
