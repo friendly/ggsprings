@@ -1,3 +1,8 @@
+# ggsprings 0.1.0
+
+* Completed vignette on least squares by springs.
+* Added functions from `geomsmoothfit`
+
 # ggsprings 0.0.1
 
 * Under-development version, still trying to pass R Cmd check

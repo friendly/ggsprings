@@ -1,6 +1,6 @@
 Package: ggsprings
 Title: ggplot2 Extension to Draw Spring Paths
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: 
     person("Michael", "Friendly", , "friendly@yorku.ca", 
            role = c("aut", "cre"),
