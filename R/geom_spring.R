@@ -1,5 +1,10 @@
 # constructors
 # https://ggplot2-book.org/ext-springs#a-constructor
+#
+# Note: So tension and diameter are implemented as aesthetics, not parameters.
+# By including them as optional aesthetics, we're making sure that any geom_spring(diameter, tension) is passed down
+# as an unmapped/static aesthetic. Because they are aesthetics and not parameters, they don't need to be in the arguments
+# of geom_spring() and for that reason don't need to be documented with #' @param.
 
 #' Connect observations with springs
 #'

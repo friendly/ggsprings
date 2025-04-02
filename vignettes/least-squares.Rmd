@@ -521,11 +521,42 @@ simple_plot +
 Note that `diameter` and `tension` are not specified here. By default, `geom_spring()` uses 0.025 times the range of
 `x` for the spring diameter, and the distance `abs(y - yend)` from the point to the fitted line as the tension.
 
+**NOTE**: Something is off in the calculation of `diameter` in the vignette here. This example works more nicely when run in the console.
+
 ## What's missing
 
-for regression problems, it is inconvenient to have to fit the same model that has been constructed by `geom_smooth()`
-and add the `fitted` value to the dataset.
+For regression problems, it is inconvenient to have to fit the same model that has been constructed by `geom_smooth()`
+and add the `fitted` value to the dataset. The [ggsmoothfit repo](https://github.com/EvaMaeRey/ggsmoothfit/)
+provides convienient functions, `geom_smooth_fit()` and `geom_smooth_residuals()` that provide some useful methods,
+and the [README file](https://github.com/EvaMaeRey/ggsmoothfit/blob/main/README.md) defines a `GeomSmoothSpring`
+that has this capability. However, this is not a package that can be installed from GitHub,
+and the implementation there depends on another package [statexpress](https://github.com/EvaMaeRey/statexpress)
 
+
+One way to simplify spring plots for models
+is to use `broom::augment()` for a fitted model to get the data.frame containing all necessary information.
+
+```{r augment}
+broom::augment(model)
+```
+
+Then, the anscombe example can be re-created as follows:
+
+```{r anscombe3}
+ans_mod <- lm(y1 ~ x1, data = anscombe)
+ans_aug <- broom::augment(ans_mod)
+
+ggplot(ans_aug) +
+  aes(x = x1, y = y1) +
+  geom_point(size = 4, color = "red") +
+  geom_smooth(method = lm, formula = y~x,
+              se = FALSE,
+              linewidth = 1.4) +
+  geom_spring(
+            aes(xend = x1, yend = .fitted),
+            color = "blue",
+            linewidth = 1)
+```
 
 
 ## References
