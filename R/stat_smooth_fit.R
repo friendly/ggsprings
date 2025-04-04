@@ -42,7 +42,7 @@ StatSmoothFit <- ggplot2::ggproto("StatSmoothFit",
 
 # Pass to stat_*/ geom_ functions
 
-library(statexpress)
+#library(statexpress)
 
 stat_smooth_fit <- function(geom = "point", ...){
 
@@ -54,14 +54,18 @@ stat_smooth_fit <- function(geom = "point", ...){
 
 geom_smooth_fit <- function(...){
 
-  qlayer(geom = qproto_update(GeomPoint, aes(colour = from_theme(accent))),
+  qlayer(geom = qproto_update(GeomPoint
+                              # aes(colour = from_theme(accent))
+                              ),
          stat = StatSmoothFit, ...)
 
 }
 
 geom_smooth_residuals <- function(...){
 
-  qlayer(geom = qproto_update(GeomSegment, aes(colour = from_theme(accent))),
+  qlayer(geom = qproto_update(GeomSegment
+                              # aes(colour = from_theme(accent))
+                              ),
          stat = StatSmoothFit, ...)
 
 }

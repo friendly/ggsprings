@@ -103,9 +103,8 @@ You can install the current version of `ggsprings` from this repo,
 
 ## TODO
 
-- Finish documenting the package. I don’t quite know how to document a
-  `ggproto` or to use `@inheritParams` for ggplot2 extensions. Add some
-  more examples illustrating spring aesthetics and features.
+- Finish documenting the package. Add some more examples illustrating
+  spring aesthetics and features.
 
 - Use the package to re-create the [gapminder
   example](examples/gapminder-ex.R).
@@ -114,7 +113,7 @@ You can install the current version of `ggsprings` from this repo,
 
 - Make a hex logo
 
-- \[begun\] Write a vignette explaining the connection between least
+- \[done\] Write a vignette explaining the connection between least
   squares and springs better. In particular,
 
   - Describe the background physics of springs, forces, energy and some
@@ -125,6 +124,11 @@ You can install the current version of `ggsprings` from this repo,
     $\Sigma (x - \bar{x})^2$.
   - Illustrate least squares regression in relation to the the normal
     equations,
+
+- Incorporate stuff from The [ggsmoothfit
+  repo](https://github.com/EvaMaeRey/ggsmoothfit/)
+
+- Incorporate a weights aesthetic
 
 ## Example
 

@@ -111,7 +111,7 @@ remotes::install.github("friendly/ggsprings")
 
 ## TODO
 
-* Finish documenting the package. I don't quite know how to document a `ggproto` or to use `@inheritParams` for ggplot2 extensions. Add some more examples illustrating spring aesthetics and
+* Finish documenting the package. Add some more examples illustrating spring aesthetics and
 features.
 
 * Use the package to re-create the [gapminder example](examples/gapminder-ex.R).
@@ -120,14 +120,15 @@ features.
 
 * Make a hex logo
 
-* [begun] Write a vignette explaining the connection between least squares and springs better. In particular,
+* [done] Write a vignette explaining the connection between least squares and springs better. In particular,
 
   + Describe the background physics of springs, forces, energy and some of it's history [done]
   + Illustrate a sample mean by springs: This is the point where positive and negative deviations [done]
   sum to zero $\Sigma (x - \bar{x}) = 0$, and also minimizes the sum of squares, $\Sigma (x - \bar{x})^2$.
   + Illustrate least squares regression in relation to the the normal equations, 
 
-
+* Incorporate stuff from The [ggsmoothfit repo](https://github.com/EvaMaeRey/ggsmoothfit/)
+* Incorporate a weights aesthetic
 
 ## Example
 
