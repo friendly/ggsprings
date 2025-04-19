@@ -560,8 +560,9 @@ cars |>
 ```
 
 ``` r
+
 StatSmoothFit <- ggplot2::ggproto("StatSmoothFit", 
-                                  ggplot2::StatSmooth,
+                                  ggplot2::Stat,
                                   compute_group = compute_group_smooth_fit,
                                   required_aes = c("x", "y"))
 
