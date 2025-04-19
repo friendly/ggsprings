@@ -579,6 +579,8 @@ GeomSpringAccent <- ggproto("GeomSpringAccent", GeomSpring,
                            default_aes = modifyList(GeomSpring$default_aes,
                                                     aes_color_accent))
 
+
+#' @export
 layer_smooth_fit <- function (mapping = NULL, data = NULL, stat = StatSmoothFit, geom = GeomPointAccent, position = "identity", 
     ..., show.legend = NA, inherit.aes = TRUE) 
 {
@@ -588,32 +590,41 @@ layer_smooth_fit <- function (mapping = NULL, data = NULL, stat = StatSmoothFit,
             ...))
 }
 
+#' @export
 stat_smooth_fit <- function(...){layer_smooth_fit(stat = StatSmoothFit, ...)}
+
+#' @export
 geom_smooth_fit <- function(...){layer_smooth_fit(geom = GeomPointAccent, ...)}
+
+#' @export
 geom_residuals <- function(...){layer_smooth_fit(geom = GeomSegmentAccent, ...)}
+
+#' @export
 geom_residual_springs <- function(...){layer_smooth_fit(geom = GeomSpringAccent, ...)}
 ```
 
 ``` r
 library(ggsprings)
-mtcars %>% 
+p <- mtcars %>% 
   ggplot() + 
   aes(x = wt, y = mpg) + 
   geom_point() + 
   geom_smooth(method = "lm") + 
-  geom_smooth_fit(method = "lm") + 
+  geom_smooth_fit(method = "lm")
+
+p + 
   geom_residuals(method = "lm")
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 ``` r
 
-ggwipe::last_plot_wipe_last() + 
+p + 
   geom_residual_springs(method = "lm")
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-2.png" width="100%" />
 
 ## Example
 
@@ -666,6 +677,11 @@ ggplot(df, aes(x, y, xend = xend, yend = yend)) +
 <img src="man/figures/README-example2-1.png" width="100%" />
 
 # Packaging
+
+``` r
+knitrExtra::chunk_names_get()
+knitrExtra::chunk_to_dir(c("compute_group_smooth_fit", "layer_smooth_fit"))
+```
 
 ``` r
 devtools::check(".")
@@ -909,7 +925,7 @@ ggplot(df) +
   theme_minimal(base_size = 15) 
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 ## Related
 

@@ -186,7 +186,7 @@ If you're going for a geom_spring(), you can use something like @inheritParams g
 
 ### StatSmoothFit
 
-```{r}
+```{r compute_group_smooth_fit}
 compute_group_smooth_fit <- function(data, scales, method = NULL, formula = NULL,
                            xseq = NULL,
                            level = 0.95, method.args = list(),
@@ -225,7 +225,7 @@ cars |>
   head()
 ```
 
-```{r}
+```{r layer_smooth_fit}
 StatSmoothFit <- ggplot2::ggproto("StatSmoothFit", 
                                   ggplot2::StatSmooth,
                                   compute_group = compute_group_smooth_fit,
@@ -245,6 +245,8 @@ GeomSpringAccent <- ggproto("GeomSpringAccent", GeomSpring,
                            default_aes = modifyList(GeomSpring$default_aes,
                                                     aes_color_accent))
 
+
+#' @export
 layer_smooth_fit <- function (mapping = NULL, data = NULL, stat = StatSmoothFit, geom = GeomPointAccent, position = "identity", 
     ..., show.legend = NA, inherit.aes = TRUE) 
 {
@@ -254,25 +256,35 @@ layer_smooth_fit <- function (mapping = NULL, data = NULL, stat = StatSmoothFit,
             ...))
 }
 
+#' @export
 stat_smooth_fit <- function(...){layer_smooth_fit(stat = StatSmoothFit, ...)}
+
+#' @export
 geom_smooth_fit <- function(...){layer_smooth_fit(geom = GeomPointAccent, ...)}
+
+#' @export
 geom_residuals <- function(...){layer_smooth_fit(geom = GeomSegmentAccent, ...)}
+
+#' @export
 geom_residual_springs <- function(...){layer_smooth_fit(geom = GeomSpringAccent, ...)}
 
 ```
 
 
+
 ```{r}
 library(ggsprings)
-mtcars %>% 
+p <- mtcars %>% 
   ggplot() + 
   aes(x = wt, y = mpg) + 
   geom_point() + 
   geom_smooth(method = "lm") + 
-  geom_smooth_fit(method = "lm") + 
+  geom_smooth_fit(method = "lm")
+
+p + 
   geom_residuals(method = "lm")
 
-ggwipe::last_plot_wipe_last() + 
+p + 
   geom_residual_springs(method = "lm")
   
 ```
@@ -332,9 +344,20 @@ ggplot(df, aes(x, y, xend = xend, yend = yend)) +
 # Packaging
 
 ```{r, eval = F}
+knitrExtra::chunk_names_get()
+knitrExtra::chunk_to_dir(c("compute_group_smooth_fit", "layer_smooth_fit"))
+
+
+```
+
+
+```{r, eval = F}
 devtools::check(".")
 devtools::install(pkg = ".", upgrade = "never") 
 ```
+
+
+
 
 # Vignettes
 
