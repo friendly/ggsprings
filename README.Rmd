@@ -1,5 +1,7 @@
 ---
-output: github_document
+output: 
+  github_document:
+    toc: TRUE
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -16,12 +18,11 @@ knitr::opts_chunk$set(
 
 options(digits=3)
 
+library(tidyverse)
 ```
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![Last Commit](https://img.shields.io/github/last-commit/friendly/ggsprings)](https://github.com/friendly/ggsprings)
-
 <!-- badges: end -->
 
 # ggsprings
@@ -31,7 +32,7 @@ options(digits=3)
 implement an extension of `geom_path` which draws paths as springs instead of straight lines.
 Aside from possible artistic use, the main impetus for this is to draw points connected by springs,
 with properties of length, diameter and tension. The initial code for this comes from
-[ggplot2: Elegant Graphics for Data Analysis (3e), Ch. 21](https://ggplot2-book.org/ext-springs)
+[ggplot2: Elegant Graphics for Data Analysis (3e), Ch. 21: A Case Study (springs) ](https://ggplot2-book.org/ext-springs)
 
 A leading example is to illustrate how least squares regression
 is "solved" by connecting data points to a rod, where the springs are constrained to be vertical.
@@ -39,7 +40,7 @@ The mathematics behind this are well-described in this [Math Stackexchange post]
 where the least squares estimates of intercept and slope are shown to be the equilibrium position that minimized the sum of forces
 and torques exerted by springs.
 
-![](man/figures/levi-least-sq-springs.png)
+![](man/figures/potential-energy.png)
 
 If the springs are allowed to be free, the physical solution is the major PCA axis.
 
@@ -111,7 +112,7 @@ remotes::install.github("friendly/ggsprings")
 
 ## TODO
 
-* Finish documenting the package. Add some more examples illustrating spring aesthetics and
+* Finish documenting the package. I don't quite know how to document a `ggproto` or to use `@inheritParams` for ggplot2 extensions. Add some more examples illustrating spring aesthetics and
 features.
 
 * Use the package to re-create the [gapminder example](examples/gapminder-ex.R).
@@ -120,23 +121,180 @@ features.
 
 * Make a hex logo
 
-* [done] Write a vignette explaining the connection between least squares and springs better. In particular,
+* [begun] Write a vignette explaining the connection between least squares and springs better. In particular,
 
-  + Describe the background physics of springs, forces, energy and some of it's history [done]
-  + Illustrate a sample mean by springs: This is the point where positive and negative deviations [done]
+  + Illustrate a sample mean by springs: This is the point where positive and negative deviations
   sum to zero $\Sigma (x - \bar{x}) = 0$, and also minimizes the sum of squares, $\Sigma (x - \bar{x})^2$.
   + Illustrate least squares regression in relation to the the normal equations, 
 
-* Incorporate stuff from The [ggsmoothfit repo](https://github.com/EvaMaeRey/ggsmoothfit/)
-* Incorporate a weights aesthetic
+
+---
+
+## What's inside
+
+### create_spring.R
+
+```{r, code = readLines("R/create_spring.R")}
+
+
+
+```
+
+### StatSpring.R
+
+```{r, code = readLines("R/StatSpring.R")}
+
+
+
+```
+
+
+
+
+### GeomSpring.R 
+
+[Documentation Q&A from ](https://github.com/ggplot2-extenders/ggplot-extension-club/discussions/83#discussioncomment-12480523) @friendly and @teunbrand
+
+> I don't quite know how to document a ggproto
+
+They are usually accompanied by @export, @format NULL and @usage NULL roxygen tags and refer with @rdname to a pretty generic piece of documentation stating that these are ggproto classes used for extending ggplot2 and are not intended to be used by users directly.
+An example of that from one of my extensions can be found here: https://github.com/teunbrand/ggh4x/blob/main/R/ggh4x_extensions.R
+
+
+```{r, code = readLines("R/GeomSpring.R")}
+
+
+
+```
+
+
+### geom_spring.R (contains `stat_spring()`) 
+
+[Documentation Q&A from ](https://github.com/ggplot2-extenders/ggplot-extension-club/discussions/83#discussioncomment-12480523) @friendly and @teunbrand
+
+> to use @inheritParams for ggplot2 extensions
+
+If you're going for a geom_spring(), you can use something like @inheritParams ggplot2::geom_path or other geom that maximises overlap between arguments.
+
+
+```{r, code = readLines("R/geom_spring.R")}
+
+
+
+```
+
+
+### StatSmoothFit
+
+```{r}
+compute_group_smooth_fit <- function(data, scales, method = NULL, formula = NULL,
+                           xseq = NULL,
+                           level = 0.95, method.args = list(),
+                           na.rm = FALSE, flipped_aes = NA){
+  
+  if(is.null(xseq)){ # predictions based on observations 
+
+  StatSmooth$compute_group(data = data, scales = scales, 
+                       method = method, formula = formula, 
+                       se = FALSE, n= 80, span = 0.75, fullrange = FALSE,
+                       xseq = data$x, 
+                       level = .95, method.args = method.args, 
+                       na.rm = na.rm, flipped_aes = flipped_aes) |>
+      dplyr::mutate(xend = data$x,
+                    yend = data$y)
+  
+  }else{  # predict specific input values
+    
+  StatSmooth$compute_group(data = data, scales = scales, 
+                       method = method, formula = formula, 
+                       se = FALSE, n= 80, span = 0.75, fullrange = FALSE,
+                       xseq = xseq, 
+                       level = .95, method.args = method.args, 
+                       na.rm = na.rm, flipped_aes = flipped_aes)   
+    
+  }
+  
+}
+```
+
+```{r}
+library(ggplot2)
+cars |>
+  select(x = speed, y = dist) |>
+  compute_group_smooth_fit(method = lm, formula = y~ x) |>
+  head()
+```
+
+```{r}
+StatSmoothFit <- ggplot2::ggproto("StatSmoothFit", 
+                                  ggplot2::StatSmooth,
+                                  compute_group = compute_group_smooth_fit,
+                                  required_aes = c("x", "y"))
+
+aes_color_accent <- GeomSmooth$default_aes[c("colour")]
+
+GeomPointAccent <- ggproto("GeomPointAccent", GeomPoint, 
+              default_aes = modifyList(GeomPoint$default_aes, 
+                                       aes_color_accent))
+
+GeomSegmentAccent <- ggproto("GeomSegmentAccent", GeomSegment,
+                           default_aes = modifyList(GeomSegment$default_aes, 
+                                                    aes_color_accent))
+
+GeomSpringAccent <- ggproto("GeomSpringAccent", GeomSpring,
+                           default_aes = modifyList(GeomSpring$default_aes,
+                                                    aes_color_accent))
+
+layer_smooth_fit <- function (mapping = NULL, data = NULL, stat = StatSmoothFit, geom = GeomPointAccent, position = "identity", 
+    ..., show.legend = NA, inherit.aes = TRUE) 
+{
+    layer(data = data, mapping = mapping, stat = stat, 
+        geom = geom, position = position, show.legend = show.legend, 
+        inherit.aes = inherit.aes, params = rlang::list2(na.rm = FALSE, 
+            ...))
+}
+
+stat_smooth_fit <- function(...){layer_smooth_fit(stat = StatSmoothFit, ...)}
+geom_smooth_fit <- function(...){layer_smooth_fit(geom = GeomPointAccent, ...)}
+geom_residuals <- function(...){layer_smooth_fit(geom = GeomSegmentAccent, ...)}
+geom_residual_springs <- function(...){layer_smooth_fit(geom = GeomSpringAccent, ...)}
+
+```
+
+Try it out:
+
+```{r}
+library(ggsprings)
+mtcars %>% 
+  ggplot() + 
+  aes(x = wt, y = mpg) + 
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  geom_smooth_fit(method = "lm") + 
+  geom_residuals(method = "lm")
+
+
+```
+
+Use `geom`residual_springs`
+
+```{r}
+mtcars %>% 
+  ggplot() + 
+  aes(x = wt, y = mpg) + 
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  geom_smooth_fit(method = "lm") + 
+  geom_residual_springs(method = "lm")
+```
 
 ## Example
 
-Some basic examples to show what is working:
+Some basic examples top show what is working:
 
 
-```{r example1}
-library(ggsprings)
+```{r example1, eval = T}
+# library(ggsprings)
 library(ggplot2)
 library(tibble)
 #library(dplyr)
@@ -160,7 +318,7 @@ ggplot(df) +
 
 Using tension and diameter as aesthetics
 
-```{r example2}
+```{r example2, eval = T}
 df <- tibble(
   x = runif(5, max = 10),
   y = runif(5, max = 10),
@@ -176,6 +334,52 @@ ggplot(df, aes(x, y, xend = xend, yend = yend)) +
                   diameter = diameter,
                   color = class),
               linewidth = 1.2) 
+```
+
+
+
+
+# Packaging
+
+```{r, eval = F}
+devtools::check(".")
+devtools::install(pkg = ".", upgrade = "never") 
+```
+
+# Vignettes
+
+## vignettes/least-squares.Rmd
+
+```{r, child = "vignettes/least-squares.Rmd"}
+
+```
+
+Using tension and diameter defaults
+
+```{r}
+set.seed(1234)
+N <- 10
+df <- tibble(
+  x = runif(N, 1, 10),
+  y = runif(N, 1, 10)
+)
+
+ggplot(df) +
+  aes(x = x, y = y,
+      xend = mean(x),
+      yend = mean(y)) +
+  geom_point(size = 5, color = "red") +
+  geom_spring(color = "blue",
+              linewidth = 1.2) +
+  geom_point(aes(x = mean(x), y = mean(y)), 
+             size = 7,
+             shape = 15,
+             color = "black") +
+  scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(breaks = 1:10) +
+  theme_minimal(base_size = 15) 
+
+
 ```
 
 ## Related 
