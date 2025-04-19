@@ -9,6 +9,7 @@
     - [GeomSpring.R](#geomspringr)
     - [geom_spring.R (contains
       `stat_spring()`)](#geom_springr-contains-stat_spring)
+    - [StatSmoothFit](#statsmoothfit)
   - [Example](#example)
 - [Packaging](#packaging)
 - [Vignettes](#vignettes)
@@ -510,6 +511,110 @@ stat_spring <- function(mapping = NULL,
 }
 ```
 
+### StatSmoothFit
+
+``` r
+compute_group_smooth_fit <- function(data, scales, method = NULL, formula = NULL,
+                           xseq = NULL,
+                           level = 0.95, method.args = list(),
+                           na.rm = FALSE, flipped_aes = NA){
+  
+  if(is.null(xseq)){ # predictions based on observations 
+
+  StatSmooth$compute_group(data = data, scales = scales, 
+                       method = method, formula = formula, 
+                       se = FALSE, n= 80, span = 0.75, fullrange = FALSE,
+                       xseq = data$x, 
+                       level = .95, method.args = method.args, 
+                       na.rm = na.rm, flipped_aes = flipped_aes) |>
+      dplyr::mutate(xend = data$x,
+                    yend = data$y)
+  
+  }else{  # predict specific input values
+    
+  StatSmooth$compute_group(data = data, scales = scales, 
+                       method = method, formula = formula, 
+                       se = FALSE, n= 80, span = 0.75, fullrange = FALSE,
+                       xseq = xseq, 
+                       level = .95, method.args = method.args, 
+                       na.rm = na.rm, flipped_aes = flipped_aes)   
+    
+  }
+  
+}
+```
+
+``` r
+library(ggplot2)
+cars |>
+  select(x = speed, y = dist) |>
+  compute_group_smooth_fit(method = lm, formula = y~ x) |>
+  head()
+#>   x     y flipped_aes xend yend
+#> 1 4 -1.85          NA    4    2
+#> 2 4 -1.85          NA    4   10
+#> 3 7  9.95          NA    7    4
+#> 4 7  9.95          NA    7   22
+#> 5 8 13.88          NA    8   16
+#> 6 9 17.81          NA    9   10
+```
+
+``` r
+StatSmoothFit <- ggplot2::ggproto("StatSmoothFit", 
+                                  ggplot2::StatSmooth,
+                                  compute_group = compute_group_smooth_fit,
+                                  required_aes = c("x", "y"))
+
+aes_color_accent <- GeomSmooth$default_aes[c("colour")]
+
+GeomPointAccent <- ggproto("GeomPointAccent", GeomPoint, 
+              default_aes = modifyList(GeomPoint$default_aes, 
+                                       aes_color_accent))
+
+GeomSegmentAccent <- ggproto("GeomSegmentAccent", GeomSegment,
+                           default_aes = modifyList(GeomSegment$default_aes, 
+                                                    aes_color_accent))
+
+GeomSpringAccent <- ggproto("GeomSpringAccent", GeomSpring,
+                           default_aes = modifyList(GeomSpring$default_aes,
+                                                    aes_color_accent))
+
+layer_smooth_fit <- function (mapping = NULL, data = NULL, stat = StatSmoothFit, geom = GeomPointAccent, position = "identity", 
+    ..., show.legend = NA, inherit.aes = TRUE) 
+{
+    layer(data = data, mapping = mapping, stat = stat, 
+        geom = geom, position = position, show.legend = show.legend, 
+        inherit.aes = inherit.aes, params = rlang::list2(na.rm = FALSE, 
+            ...))
+}
+
+stat_smooth_fit <- function(...){layer_smooth_fit(stat = StatSmoothFit, ...)}
+geom_smooth_fit <- function(...){layer_smooth_fit(geom = GeomPointAccent, ...)}
+geom_residuals <- function(...){layer_smooth_fit(geom = GeomSegmentAccent, ...)}
+geom_residual_springs <- function(...){layer_smooth_fit(geom = GeomSpringAccent, ...)}
+```
+
+``` r
+library(ggsprings)
+mtcars %>% 
+  ggplot() + 
+  aes(x = wt, y = mpg) + 
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  geom_smooth_fit(method = "lm") + 
+  geom_residuals(method = "lm")
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+
+``` r
+
+ggwipe::last_plot_wipe_last() + 
+  geom_residual_springs(method = "lm")
+```
+
+<img src="man/figures/README-unnamed-chunk-9-2.png" width="100%" />
+
 ## Example
 
 Some basic examples top show what is working:
@@ -804,7 +909,7 @@ ggplot(df) +
   theme_minimal(base_size = 15) 
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
 
 ## Related
 
