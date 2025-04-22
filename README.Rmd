@@ -228,7 +228,7 @@ cars |>
 ```{r layer_smooth_fit}
 
 StatSmoothFit <- ggplot2::ggproto("StatSmoothFit", 
-                                  ggplot2::Stat,
+                                  ggplot2::StatSmooth,
                                   compute_group = compute_group_smooth_fit,
                                   required_aes = c("x", "y"))
 
@@ -279,15 +279,24 @@ p <- mtcars %>%
   ggplot() + 
   aes(x = wt, y = mpg) + 
   geom_point() + 
-  geom_smooth(method = "lm") + 
-  geom_smooth_fit(method = "lm")
+  geom_smooth(method = lm) + 
+  geom_smooth_fit(method = lm)
 
 p + 
-  geom_residuals(method = "lm")
+  geom_residuals(method = lm) + 
+  geom_smooth_fit(method = lm, xseq = c(0,2:3), 
+                  color = "red", size = 3)
 
 p + 
-  geom_residual_springs(method = "lm")
+  geom_residual_springs(method = lm)
   
+mtcars %>% 
+  ggplot() + 
+  aes(x = wt, y = mpg) + 
+  geom_point() + 
+  geom_smooth(method = lm, formula = y ~ 1) + 
+  geom_residual_springs(method = lm, formula = y ~ 1) 
+
 ```
 
 

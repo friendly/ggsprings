@@ -562,7 +562,7 @@ cars |>
 ``` r
 
 StatSmoothFit <- ggplot2::ggproto("StatSmoothFit", 
-                                  ggplot2::Stat,
+                                  ggplot2::StatSmooth,
                                   compute_group = compute_group_smooth_fit,
                                   required_aes = c("x", "y"))
 
@@ -610,11 +610,13 @@ p <- mtcars %>%
   ggplot() + 
   aes(x = wt, y = mpg) + 
   geom_point() + 
-  geom_smooth(method = "lm") + 
-  geom_smooth_fit(method = "lm")
+  geom_smooth(method = lm) + 
+  geom_smooth_fit(method = lm)
 
 p + 
-  geom_residuals(method = "lm")
+  geom_residuals(method = lm) + 
+  geom_smooth_fit(method = lm, xseq = c(0,2:3), 
+                  color = "red", size = 3)
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
@@ -622,10 +624,22 @@ p +
 ``` r
 
 p + 
-  geom_residual_springs(method = "lm")
+  geom_residual_springs(method = lm)
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-2.png" width="100%" />
+
+``` r
+  
+mtcars %>% 
+  ggplot() + 
+  aes(x = wt, y = mpg) + 
+  geom_point() + 
+  geom_smooth(method = lm, formula = y ~ 1) + 
+  geom_residual_springs(method = lm, formula = y ~ 1) 
+```
+
+<img src="man/figures/README-unnamed-chunk-7-3.png" width="100%" />
 
 ## Example
 
